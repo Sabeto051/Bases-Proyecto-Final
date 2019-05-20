@@ -3,8 +3,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Entradas {
+	static Scanner reader=new Scanner(System.in);
 public int leerInt(String valor, int min, int max) {
-	Scanner reader=new Scanner(System.in);
+	reader=new Scanner(System.in);
 	boolean error=false;
 	System.out.print("Ingrese "+valor+" ");
 	int a=reader.nextInt();
@@ -23,12 +24,10 @@ public int leerInt(String valor, int min, int max) {
 		System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
 		}
 	}
-	
-	reader.close();
 	return a;
 }
 public double leerDouble(String valor, double min, double max) {
-	Scanner reader=new Scanner(System.in);
+	reader=new Scanner(System.in);
 	boolean error=false;
 	System.out.print("Ingrese "+valor+" ");
 	double a=reader.nextDouble();
@@ -47,15 +46,13 @@ public double leerDouble(String valor, double min, double max) {
 		System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
 		}
 	}
-	
-	reader.close();
 	return a;
 }
 public String leerString(String valor) {
-	Scanner reader=new Scanner(System.in);
+	reader=new Scanner(System.in);
 	System.out.print("Ingrese "+valor+" ");
-	String a=reader.nextLine();
-	reader.close();
+	String a="";
+	a= reader.nextLine();
 	return a;
 }
 
