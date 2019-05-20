@@ -114,6 +114,7 @@ public void AccederATablaBD() throws SQLException, ClassNotFoundException {
 			if(2==baseD) {
 				//Agregar
 				cls();
+				System.out.println("si no desea agregar nada llene los campos requeridos con 'X'");
 				String nombre_tabla=inputs.leerString("el nombre de la tabla a agregar");
 				String caracteristicas_tabla=inputs.leerString("las caracteristicas de la tabla a agregar");
 				DataBase.AgregarTabla(nombre_tabla,caracteristicas_tabla);
@@ -127,10 +128,16 @@ public void AccederATablaBD() throws SQLException, ClassNotFoundException {
 					for(int i=0;i<BD.length;i++) {
 						System.out.println((i+1)+": "+BD[i]);
 					}
+					System.out.println((BD.length+1)+": Ninguno");
 					if(BD.length>0) {
-					int num_tabla=inputs.leerInt("el numero de la tabla a eliminar",1,BD.length);
+					int num_tabla=inputs.leerInt("el numero de la tabla a eliminar",1,BD.length+1);
+					if(BD.length+1==num_tabla) {
+					}
+					
+					else {
 					DataBase.tabla=BD[num_tabla-1];
 					DataBase.EliminarTabla();
+					}
 					cls();
 					AccederATablaBD();
 					}
@@ -192,6 +199,7 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 	int baseD=inputs.leerInt("la accion que deseee ejecutar",1,5);
 	if(baseD>3) {
 		if(baseD==4) {
+			cls();
 			AccederATablaBD();
 		}else {
 			cls();

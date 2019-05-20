@@ -3,6 +3,7 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.Properties;
 
+import com.mysql.cj.conf.ConnectionUrl.Type;
 import com.mysql.cj.protocol.Resultset;
 
 
@@ -158,12 +159,17 @@ public class DataBase {
 	        }
 	}
 	public static void AgregarTabla(String nombreTabla,String caracteristicas) throws SQLException {
+		try {
 		String table="CREATE TABLE IF NOT EXISTS "+nombreTabla+"(" 
 	            + caracteristicas+");";
 		caracteristicas=nombreTabla+caracteristicas;
 		stmt = dbConnection.createStatement();
         //This line has the issue
         stmt.executeUpdate(table);
+		}
+		catch(SQLException e) {
+		System.out.println("Caracteristicas no validas");
+		}
 	}
 	public static void getColumnNames(ResultSet rs) throws SQLException {
 	    if (rs == null) {
@@ -194,45 +200,88 @@ public class DataBase {
 		  // Specify the type of object; in this case we want tables
 		 
 		String BD[]=new String[0];
-		ResultSet resultSet = metadata.getColumns(dataBase, null, tabla, null);
+		ResultSet resultSet = metadata.getColumns(dataBase, null, tabla, "%");
 		
 	      // get the column names from the ResultSet
 		int cont=0;
 		String querys="";
 		int primero=0;
+		int postypes=0;
+		int posnames=0;
+		String typess[]=new String[0];
+		String namess[]=new String[0];
 		  while (resultSet.next()) {
 		 
 		    String tableName = resultSet.getString("COLUMN_NAME");
+		    String type = resultSet.getString("TYPE_NAME");
+		    
+		 
 		    if(primero==0) {
 		    	 primero=1;
 		    }
 		    else {
 		    	if(primero==1) {
 		    		querys=querys+tableName;
+		    		typess=Arrays.copyOf(typess, typess.length+1);
+		    		typess[postypes]=type;
+				    postypes++;
+				    namess=Arrays.copyOf(namess, namess.length+1);
+		    		namess[posnames]=tableName;
+				    posnames++;
 			    	 primero=2;
 			    }
 		    	else {
 		    	 querys=querys+", "+tableName;
+		    	 System.out.println(tableName);
+		    	 System.out.println(type);
+		    	 System.out.println();
+		    	 namess=Arrays.copyOf(namess, namess.length+1);
+		    		namess[posnames]=tableName;
+				    posnames++;
+		    	 typess=Arrays.copyOf(typess, typess.length+1);
+				    typess[postypes]=type;
+				    postypes++;
 		    	}
 		    }
 		    cont++;
 		 
 		  }
-		System.out.println(cont-2);
 		String preguntas="?";
 		for(int i=0;i<cont-2;i++) {
 			preguntas=preguntas+", ?";
 		}
 		System.out.println(preguntas);
 		String query = " insert into "+ tabla + " ("+querys+")"
-		        + " values (?, ?, ?, ?, ?)";
+		        + " values ("+preguntas+")";
 
 		      // create the mysql insert preparedstatement
 		      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
-		      preparedStmt.setString (1, "Barney");
-		      preparedStmt.setString (2, "Rubble");
-		      preparedStmt.setBoolean(4, false);
-		      preparedStmt.setInt    (5, 5000);
+		     Entradas inputs=new Entradas();
+		      for(int i=0;i<typess.length;i++) {
+		    	  System.out.println(typess[i]);
+		    	  switch(typess[i]) {
+		    	  case "INT": {
+		    		  int num_ingresado=inputs.leerInt(namess[i],0,1000000000);
+		    		  preparedStmt.setInt    ((i+1), num_ingresado);
+		    	  }
+		    	  case "VARCHAR": {
+		    		  String num_ingresado=inputs.leerString(namess[i]);
+		    		  preparedStmt.setString((i+1), num_ingresado);
+		    	  }
+		    	  case "FLOAT": {
+		    		  float num_ingresado=(float) inputs.leerDouble(namess[i],0,1000000000);
+		    		  preparedStmt.setFloat((i+1), num_ingresado);
+		    	  }
+		    	  case "TEXT": {
+		    		  String num_ingresado=inputs.leerString(namess[i]);
+		    		  preparedStmt.setString((i+1), num_ingresado);
+		    	  }
+		    	  
+		    	  
+		    	  }
+		    	  
+		    	  
+		      }
 	}
 
 }
