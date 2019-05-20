@@ -6,21 +6,21 @@ public class Menus {
 		System.out.println("Seleccione la opcion deseada");
 		System.out.println("1: Acceder a la base de datos");
 		System.out.println("2: Salir");
-	
+
 	}
 	public String[] MenuUsuarioContrasenaBD() {
-		System.out.println("Ingrese Usuario (en blanco se considerará root)");
-		String usuario="";//inputs.leerString(" el Usuario");
+		System.out.println("Ingrese Usuario (en blanco se considerarï¿½ root)");
+		String usuario=inputs.leerString(" el Usuario");
 		if(usuario.equals("")) {
 			usuario="root";
 		}
-		System.out.println("Ingrese Contraseña");
-		String contrasena="holahola123";//inputs.leerString(" la contrasena");
+		System.out.println("Ingrese Contraseï¿½a");
+		String contrasena=inputs.leerString(" la contrasena");
 		String cred[]=new String[2];
-		
+
 		cred[0]=usuario;
 		cred[1]=contrasena;
-		
+
 		return cred;
 	}
 	public void MenuBD() {
@@ -45,6 +45,6 @@ public class Menus {
 				+"4. Retroceder "+ "\n" 
 				+"5. Salir");
 	}
-	
+
 	//Alter table?
 }
