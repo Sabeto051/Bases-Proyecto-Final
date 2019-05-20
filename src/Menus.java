@@ -8,18 +8,18 @@ public class Menus {
 		System.out.println("2: Salir");
 	
 	}
-	public String[] MenuUsuarioContraseñaBD() {
+	public String[] MenuUsuarioContrasenaBD() {
 		System.out.println("Ingrese Usuario (en blanco se considerará root)");
 		String usuario="";//inputs.leerString(" el Usuario");
 		if(usuario.equals("")) {
 			usuario="root";
 		}
-		System.out.println("Ingrese Contraseña");
-		String contraseña="holahola123";//inputs.leerString(" la contraseña");
+		System.out.println("Ingrese Contrasena");
+		String contrasena="holahola123";//inputs.leerString(" la contrasena");
 		String cred[]=new String[2];
 		
 		cred[0]=usuario;
-		cred[1]=contraseña;
+		cred[1]=contrasena;
 		
 		return cred;
 	}

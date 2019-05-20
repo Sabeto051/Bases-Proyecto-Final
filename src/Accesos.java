@@ -32,7 +32,7 @@ else {
 }
 
 public void Credenciales() throws SQLException, ClassNotFoundException {
-	String cred[]=menus.MenuUsuarioContraseñaBD();
+	String cred[]=menus.MenuUsuarioContrasenaBD();
 	DataBase.username=cred[0];
 	DataBase.password=cred[1];
 	if(DataBase.Connect("mysql")) {

@@ -232,9 +232,6 @@ public class DataBase {
 			    }
 		    	else {
 		    	 querys=querys+", "+tableName;
-		    	 System.out.println(tableName);
-		    	 System.out.println(type);
-		    	 System.out.println();
 		    	 namess=Arrays.copyOf(namess, namess.length+1);
 		    		namess[posnames]=tableName;
 				    posnames++;
@@ -250,20 +247,21 @@ public class DataBase {
 		for(int i=0;i<cont-2;i++) {
 			preguntas=preguntas+", ?";
 		}
-		System.out.println(preguntas);
 		String query = " insert into "+ tabla + " ("+querys+")"
 		        + " values ("+preguntas+")";
 
 		      // create the mysql insert preparedstatement
 		      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
+		      
+		     
+		      
 		     Entradas inputs=new Entradas();
 		      for(int i=0;i<typess.length;i++) {
 		    	  System.out.println(typess[i]);
-		    	  switch(typess[i]) {
-		    	  case "INT": {
+		    	  if(typess[i].equals("INT") {
 		    		  int num_ingresado=inputs.leerInt(namess[i],0,1000000000);
 		    		  preparedStmt.setInt    ((i+1), num_ingresado);
-		    	  }
+		    	  }/*
 		    	  case "VARCHAR": {
 		    		  String num_ingresado=inputs.leerString(namess[i]);
 		    		  preparedStmt.setString((i+1), num_ingresado);
@@ -276,12 +274,16 @@ public class DataBase {
 		    		  String num_ingresado=inputs.leerString(namess[i]);
 		    		  preparedStmt.setString((i+1), num_ingresado);
 		    	  }
+		    	  default:
 		    	  
-		    	  
-		    	  }
+		    	  }*/
 		    	  
 		    	  
 		      }
+		      
+		      preparedStmt.execute();
+		      
+		      
 	}
 
 }
