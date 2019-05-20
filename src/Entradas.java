@@ -30,7 +30,7 @@ public double leerDouble(String valor, double min, double max) {
 	reader=new Scanner(System.in);
 	boolean error=false;
 	System.out.print("Ingrese "+valor+" ");
-	double a=reader.nextDouble();
+	double a=Double.parseDouble(reader.nextLine());
 	System.out.println();
 	if((a<min || a>max)) {
 	error=true;
@@ -39,7 +39,30 @@ public double leerDouble(String valor, double min, double max) {
 	while(error==true) {
 		error=false;
 		System.out.print("Ingrese "+valor+" ");
-		a=reader.nextDouble();
+		a=Double.parseDouble(reader.nextLine());
+		System.out.println();
+		if(a<min || a>max) {
+		error=true;
+		System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+		}
+	}
+	return a;
+}
+public float leerfloat(String valor, float min, float max) {
+	reader=new Scanner(System.in);
+	boolean error=false;
+	System.out.print("Ingrese "+valor+" ");
+	float a=Float.parseFloat(reader.nextLine());
+	//float a=(float)reader.nextfloat();
+	System.out.println();
+	if((a<min || a>max)) {
+	error=true;
+	System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+	}
+	while(error==true) {
+		error=false;
+		System.out.print("Ingrese "+valor+" ");
+		a=Float.parseFloat(reader.nextLine());
 		System.out.println();
 		if(a<min || a>max) {
 		error=true;

@@ -258,25 +258,23 @@ public class DataBase {
 		     Entradas inputs=new Entradas();
 		      for(int i=0;i<typess.length;i++) {
 		    	  System.out.println(typess[i]);
-		    	  if(typess[i].equals("INT") {
+		    	  if(typess[i].equals("INT")){
 		    		  int num_ingresado=inputs.leerInt(namess[i],0,1000000000);
 		    		  preparedStmt.setInt    ((i+1), num_ingresado);
-		    	  }/*
-		    	  case "VARCHAR": {
+		    	  }
+		    	  if(typess[i].equals("VARCHAR")){
 		    		  String num_ingresado=inputs.leerString(namess[i]);
 		    		  preparedStmt.setString((i+1), num_ingresado);
 		    	  }
-		    	  case "FLOAT": {
-		    		  float num_ingresado=(float) inputs.leerDouble(namess[i],0,1000000000);
+		    	  if(typess[i].equals("FLOAT")){
+		    		  float num_ingresado=(float) inputs.leerfloat(namess[i],0,10000000);
 		    		  preparedStmt.setFloat((i+1), num_ingresado);
 		    	  }
-		    	  case "TEXT": {
+		    	  if(typess[i].equals("TEXT")){
 		    		  String num_ingresado=inputs.leerString(namess[i]);
 		    		  preparedStmt.setString((i+1), num_ingresado);
 		    	  }
-		    	  default:
-		    	  
-		    	  }*/
+		    	 
 		    	  
 		    	  
 		      }
