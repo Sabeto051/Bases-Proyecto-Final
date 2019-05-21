@@ -304,8 +304,10 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 			DataBase.EliminarRegistro(campo, input);
 			}
 			else {
-			cls();
-			//Modificar Registro
+				cls();
+				String campo=inputs.leerString("campo");
+				String input=inputs.leerString("input");
+				DataBase.EliminarRegistro(campo, input);
 			}
 		}
 		

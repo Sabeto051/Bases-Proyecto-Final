@@ -257,6 +257,25 @@ public class DataBase {
 	      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
 	      preparedStmt.execute();
 	      }
+
+	public static void ModificarRegistro(String campo,  Object dato) throws SQLException {
+		// our SQL SELECT query. 
+	      // if you only need a few columns, specify them by name instead of using "*"
+	      String query = " insert into "+ DataBase.tabla + " ("+campo+")"
+			        + " values (?) "+" WHERE "+campo+"='"+dato.toString()+"';";
+	      PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
+	      		  if(dato instanceof Integer) {
+	      		  preparedStmt.setInt(1, (Integer)dato);    
+	      		  }
+			      if(dato instanceof Float) {
+			      preparedStmt.setFloat(1, (Float)dato);  
+			      		  }
+			      		
+				  if(dato instanceof String) {
+				  preparedStmt.setString (1, (String)dato);  
+				      		  }
+	      	 preparedStmt.execute();
+	      }
 }
 
 
