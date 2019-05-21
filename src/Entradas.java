@@ -1,63 +1,125 @@
 import java.io.Console;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Entradas {
 	static Scanner reader=new Scanner(System.in);
-public int leerInt(String valor, int min, int max) {
-	reader=new Scanner(System.in);
-	boolean error=false;
-	System.out.print("Ingrese "+valor+" ");
-	int a=reader.nextInt();
-	System.out.println();
-	if((a<min || a>max)) {
-	error=true;
-	System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
-	}
-	while(error==true) {
-		error=false;
-		System.out.print("Ingrese "+valor+" ");
-		a=reader.nextInt();
-		System.out.println();
-		if(a<min || a>max) {
-		error=true;
-		System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+	public int leerInt(String valor, int min, int max) {
+		boolean error=true;
+		int a=-1;
+		while(error==true) {
+		try {
+			error=false;
+			reader=new Scanner(System.in);
+			System.out.print("Ingrese "+valor+" ");
+			a=Integer.parseInt(reader.nextLine());
+			//float a=(float)reader.nextfloat();
+			System.out.println();
+			if((a<min || a>max)) {
+				error=true;
+				System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+			}
+			while(error==true) {
+				error=false;
+				System.out.print("Ingrese "+valor+" ");
+				a=Integer.parseInt(reader.nextLine());
+				System.out.println();
+				if(a<min || a>max) {
+					error=true;
+					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+				}
+			}
 		}
-	}
-	return a;
-}
-public double leerDouble(String valor, double min, double max) {
-	reader=new Scanner(System.in);
-	boolean error=false;
-	System.out.print("Ingrese "+valor+" ");
-	double a=reader.nextDouble();
-	System.out.println();
-	if((a<min || a>max)) {
-	error=true;
-	System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
-	}
-	while(error==true) {
-		error=false;
-		System.out.print("Ingrese "+valor+" ");
-		a=reader.nextDouble();
-		System.out.println();
-		if(a<min || a>max) {
-		error=true;
-		System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+		catch(InputMismatchException | NumberFormatException e) {
+			System.out.println("Hubo un error. Valor Ingresado debe ser float");
+			error=true;
 		}
+		}
+		return a;
 	}
-	return a;
-}
-public String leerString(String valor) {
-	reader=new Scanner(System.in);
-	System.out.print("Ingrese "+valor+" ");
-	String a="";
-	a= reader.nextLine();
-	return a;
-}
+	public double leerDouble(String valor, double min, double max) {
+		boolean error=true;
+		double a=-1;
+		while(error==true) {
+		try {
+			error=false;
+			reader=new Scanner(System.in);
+			System.out.print("Ingrese "+valor+" ");
+			a=Double.parseDouble(reader.nextLine());
+			//float a=(float)reader.nextfloat();
+			System.out.println();
+			if((a<min || a>max)) {
+				error=true;
+				System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+			}
+			while(error==true) {
+				error=false;
+				System.out.print("Ingrese "+valor+" ");
+				a=Double.parseDouble(reader.nextLine());
+				System.out.println();
+				if(a<min || a>max) {
+					error=true;
+					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+				}
+			}
+		}
+		catch(InputMismatchException | NumberFormatException e) {
+			System.out.println("Hubo un error. Valor Ingresado debe ser float");
+			error=true;
+		}
+		}
+		return a;
+
+	}
+	public float leerfloat(String valor, float min, float max) {
+		boolean error=true;
+		float a=-1;
+		while(error==true) {
+		try {
+			error=false;
+			reader=new Scanner(System.in);
+			System.out.print("Ingrese "+valor+" ");
+			a=Float.parseFloat(reader.nextLine());
+			//float a=(float)reader.nextfloat();
+			System.out.println();
+			if((a<min || a>max)) {
+				error=true;
+				System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max);
+			}
+			while(error==true) {
+				error=false;
+				System.out.print("Ingrese "+valor+" ");
+				a=Float.parseFloat(reader.nextLine());
+				System.out.println();
+				if(a<min || a>max) {
+					error=true;
+					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+				}
+			}
+		}
+		catch(InputMismatchException | NumberFormatException e) {
+			System.out.println("Hubo un error. Valor Ingresado debe ser float");
+			error=true;
+		}
+		}
+		return a;
 
 
 
+	}
+	public String leerString(String valor) {
+		reader=new Scanner(System.in);
+		System.out.print("Ingrese "+valor+" ");
+		String a="";
+		a= reader.nextLine();
+		return a;
+	}
+
+
+	}
 	
 
-}
+
+
+
