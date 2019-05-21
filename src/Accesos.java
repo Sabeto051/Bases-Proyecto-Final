@@ -272,7 +272,9 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 			    }
 			    cont++;
 			 
-			  }  
+			  }
+			      
+			     
 			     Object[] datos=new Object[typess.length];
 			     Entradas inputs=new Entradas();
 			      for(int i=0;i<typess.length;i++) {
