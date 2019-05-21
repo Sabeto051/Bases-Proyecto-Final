@@ -1,5 +1,5 @@
 -- crear la base de datos
-drop schema Nisand;
+-- drop schema Nisand;
 create database if not exists Nisand; 
 use Nisand;
 
@@ -57,9 +57,6 @@ insert into FirstNameP (profesor_id, nombre_id) values ('1', '1');
 insert into FirstNameP (profesor_id, nombre_id) values ('2', '2');
 insert into LastNameP (profesor_id, apellido_id) values ('1', '1');
 insert into LastNameP (profesor_id, apellido_id) values ('2', '2');
-
-
-
 
 
 
