@@ -27,14 +27,14 @@ public class Simulacion {
 
 	public void loginAdmin() {
 		// Conecta tabla de usuarios
-		// Hagamos que el user sea el usuario con ID 1 - Lo creamos a mano, no por la app
+		// Se muestra lo que posada había hecho al inicio
 
 	}
 	public void registerUser() {
 		// Conecta con la tabla de usuarios
 		// Crea un nuevo usuario con Plan (porque es obligatiorio)
 		this.telefono = this.input.leerInt("Telefono", 0, 1000000000);
-		String pwd = this.input.leerString("Contrasena");
+		this.input.leerString("Contrasena");
 		// Se muestran los planes
 		this.input.leerString("Numero del plan");
 		mostrarPlanUser();
@@ -43,7 +43,7 @@ public class Simulacion {
 		// Conecta con la tabla de usuarios
 		// pide número y contraseña
 		this.telefono = this.input.leerInt("Telefono", 0, 1000000000);
-		String pwd = this.input.leerString("Contrasena");
+		this.input.leerString("Contrasena");
 		mostrarPlanUser();
 	}
 
@@ -52,7 +52,8 @@ public class Simulacion {
 		// Se conecta la tabla Usuarios-Planes
 		System.out.println("Hola INSERTE NOMBRE AQUI");
 		System.out.println("Su plan acaba el INSERTE FECHA FINAL AQUI");
-		System.out.println("1. Comprar nuevo Plan\n2. Acceder a Escuelas\n3. Ver Cursos completados");
+		System.out.println("1. Comprar nuevo Plan\n2. Acceder a Escuelas\n3. Ver Cursos completados\n"
+				+ "4. Ver preguntas hechas");
 		int option = this.input.leerInt("opcion deseada", 1, 3);
 		switch (option) {
 		case 1:
@@ -64,9 +65,23 @@ public class Simulacion {
 		case 3:
 			mostrarCursosCompletados();
 			break;
+		case 4:
+			mostrarPreguntasUser();
+			break;
 		}
 
 	}
+	
+	public void mostrarPreguntasUser() {
+		// Se muestran las preguntas hechas por el usuario
+		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
+		mostrarPreguntasUserRespuesta();
+	}
+	
+	public void mostrarPreguntasUserRespuesta() {
+		// Creo que este metodo se puede combinar con otro que está más abajo 
+	}
+	
 	public void mostrarCursosCompletados() {
 		// Se conecta con tabla Cursos , Usuarios y  Estudaintes-Cursos
 		// Se muestran los cursos completados
@@ -85,7 +100,7 @@ public class Simulacion {
 	public void mostrarEscuelas() {
 		// Se conecta con la tabla Escuelas
 		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
-		
+
 		// se muestran las escuelas
 		// se escoge una escuela
 		this.input.leerString("Cualquier tecla para escoger escuela\n\n\n");
@@ -106,9 +121,9 @@ public class Simulacion {
 		this.input.leerString("Cualquier tecla para escoger Curso\n\n\n");
 		mostrarCursoMenu(); // del seleccionado
 	}
-	
-	
-	
+
+
+
 	public void mostrarCursoMenu() {
 		System.out.println("Curso INSERTE NOMBRE AQUI");
 		System.out.println("Profesor INSERTE NOMBRE AQUI");
@@ -123,15 +138,16 @@ public class Simulacion {
 			break;
 		}
 	}
-	
+
 	public void mostrarVideos() {
 		System.out.println("Curso INSERTE NOMBRE AQUI");
 		// Se muestra la lista de videos del curso
 		// Si se puede, mostrar en una columna al lado de los videos cuales ha visto
-		this.input.leerString("Cualquier tecla para ver Video\n\n\n");
+		this.input.leerString("Cualquier tecla para escoder Video\n\n\n");
 		verVideo();
 	}
 	public void verVideo() {
+		System.out.println("Video INSERTE TITULO AQUI");
 		// se conecta la tabla videos y Estudiante-videos
 		// se agrega el video a videos vistos por el estudiante
 		System.out.println("Video visto");
@@ -139,10 +155,70 @@ public class Simulacion {
 		mostrarVideos();
 	}
 	public void mostrarForos() {
+		System.out.println("Curso INSERTE NOMBRE AQUI");
 		// se conecta con la tabla foros
 		// se muestran los foros del curso
 		this.input.leerString("Cualquier tecla para escoger Foro\n\n\n");
+		mostrarForoMenu();
+	}
+
+	public void mostrarForoMenu() {
+		System.out.println("Foro INSERTE NOMBRE AQUI");
+		System.out.println("1. Ver Preguntas del foro\n2. Hacer Pregunta");
+		int option = this.input.leerInt("opcion deseada", 1, 2);
+		switch (option) {
+		case 1:
+			mostrarPreguntas();
+			break;
+		case 2:
+			crearPregunta();
+			break;
+		}
+	}
+
+	public void mostrarPreguntas() {
+		// Se conecta con tablas preguntas 
+		// Se muestran las preguntas del foro
+		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
+		mostrarPreguntaMenu();
+	}
+	public void mostrarPreguntaMenu() {
+		System.out.println("1. Ver Respuestas a la pregunta\n2. Retroceder");
+		int option = this.input.leerInt("opcion deseada", 1, 2);
+		switch (option) {
+		case 1:
+			mostrarRespuestas();
+			break;
+		case 2:
+			mostrarPreguntas();
+			break;
+		}
+	}
+	public void mostrarRespuestas() {
+		System.out.println("Respesutas de la pregunta CONTENIDO PREGUNTA");
+		// Se muestran las respuestas de la pregunta
+		System.out.println("1. Responder Pregunta\n2. retroceder");
+		int option = this.input.leerInt("opcion deseada", 1, 2);
+		switch (option) {
+		case 1:
+			crearRespuesta();
+			break;
+		case 2:
+			mostrarPreguntas();
+			break;
+		}
 		
+	}
+
+	public void crearRespuesta() {
+		// Se conecta con tabla respuestas, preguntas, usuario
+		this.input.leerString("Cualquier tecla para Responder\n\n\n");
+		mostrarPreguntas();
+	}
+	public void crearPregunta() {
+		// Se conecta con tabla usuarios, foro, pregunta
+		this.input.leerString("Pregunta: ");
+		mostrarForoMenu();
 	}
 
 	public static void main(String[] args) {
