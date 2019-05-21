@@ -1,8 +1,10 @@
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -46,13 +48,25 @@ public void AccederABD() throws SQLException, ClassNotFoundException {
 	menus.MenuBD();
 	String BD[]=DataBase.executeMySQLQuery();
 	System.out.println();
-	System.out.println("Accion a realizar");
-	int baseD=inputs.leerInt("el numero asociado a la base de datos que desee conectar" + "\n" 
+	
+	/**/
+	int baseD=0;
+	for(int i=0;i<BD.length;i++) {
+		if(BD[i].equals("nisand")) {
+		baseD=i+1;
+		}
+	}
+	
+	/**/
+	
+	/*	System.out.println("Accion a realizar");
+	    int baseD=inputs.leerInt("el numero asociado a la base de datos que desee conectar" + "\n" 
 			+ (BD.length+1)+" para Crear una Nueva Base de Datos"+ "\n" 
 			+ (BD.length+2)+" para Eliminar Base de Datos"+ "\n" 
 			+ (BD.length+3)+" para retroceder"+ "\n" 
 			+ (BD.length+4) +" para Salir"
-			, 1, BD.length+4);
+			, 1, BD.length+4);*/
+	
 	if(baseD>BD.length) {
 		if(BD.length+1==baseD) {
 			cls();
@@ -209,12 +223,86 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 	else {
 		
 		if(baseD==1) {
-			DataBase.AgregarRegistro();
+			cls();
+			DatabaseMetaData metadata = DataBase.dbConnection.getMetaData();
+			 
+			 
+			  // Specify the type of object; in this case we want tables
+			 
+			String BD[]=new String[0];
+			ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, "%");
+			
+		      // get the column names from the ResultSet
+			int cont=0;
+			String querys="";
+			int primero=0;
+			int postypes=0;
+			int posnames=0;
+			String typess[]=new String[0];
+			String namess[]=new String[0];
+			  while (resultSet.next()) {
+			 
+			    String tableName = resultSet.getString("COLUMN_NAME");
+			    String type = resultSet.getString("TYPE_NAME");
+			    
+			 
+			    if(primero==0) {
+			    	 primero=1;
+			    }
+			    else {
+			    	if(primero==1) {
+			    		querys=querys+tableName;
+			    		typess=Arrays.copyOf(typess, typess.length+1);
+			    		typess[postypes]=type;
+					    postypes++;
+					    namess=Arrays.copyOf(namess, namess.length+1);
+			    		namess[posnames]=tableName;
+					    posnames++;
+				    	 primero=2;
+				    }
+			    	else {
+			    	 querys=querys+", "+tableName;
+			    	 namess=Arrays.copyOf(namess, namess.length+1);
+			    		namess[posnames]=tableName;
+					    posnames++;
+			    	 typess=Arrays.copyOf(typess, typess.length+1);
+					    typess[postypes]=type;
+					    postypes++;
+			    	}
+			    }
+			    cont++;
+			 
+			  }  
+			     Object[] datos=new Object[typess.length];
+			     Entradas inputs=new Entradas();
+			      for(int i=0;i<typess.length;i++) {
+			    	  System.out.println(typess[i]);
+			    	  if(typess[i].equals("INT")){
+			    		 datos[i]=inputs.leerInt(namess[i],0,1000000000);
+			    	  }
+			    	  if(typess[i].equals("VARCHAR")){
+			    		  datos[i]=inputs.leerString(namess[i]);
+			    	  }
+			    	  if(typess[i].equals("FLOAT")){
+			    		  datos[i]=(float) inputs.leerfloat(namess[i],0,10000000);
+			    	  }
+			    	  if(typess[i].equals("TEXT")){
+			    		  datos[i]=inputs.leerString(namess[i]);
+			    	  }
+			    	 
+			    	  
+			    	  
+			      }
+			      DataBase.AgregarRegistro(datos,namess,typess);
 		}else {
 			if(baseD==2) {
-			//Eliminar Registro
+			cls();
+			String campo=inputs.leerString("campo");
+			String input=inputs.leerString("input");
+			DataBase.EliminarRegistro(campo, input);
 			}
 			else {
+			cls();
 			//Modificar Registro
 			}
 		}

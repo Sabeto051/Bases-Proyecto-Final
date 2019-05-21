@@ -1,5 +1,5 @@
 -- crear la base de datos
-drop schema Nisand;
+-- drop schema Nisand;
 create database if not exists Nisand; 
 use Nisand;
 
@@ -25,8 +25,3 @@ create table if not exists FirstNameP(profesor_id int, nombre_id int, primary ke
 create table if not exists LastNameP(profesor_id int, apellido_id int, primary key(profesor_id, apellido_id), index p_id (profesor_id), index n_id (apellido_id), foreign key(profesor_id) references Profesores(id) on update cascade on delete cascade, foreign key (apellido_id) references Apellidos(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists UsuariosCursos(usuario_id int, curso_id int, primary key(usuario_id, curso_id), index u_id (usuario_id), index c_id (curso_id), foreign key (usuario_id) references Usuarios(id) on update cascade on delete cascade, foreign key (curso_id) references Cursos(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists UsuariosVideos(usuario_id int, video_id int, primary key(usuario_id, video_id), index u_id (usuario_id), index v_id (video_id), foreign key (usuario_id) references Usuarios(id) on update cascade on delete cascade, foreign key (video_id) references Videos(id) on update cascade on delete cascade) ENGINE=INNODB;
-
-
-
--- las pks que dependen de otra tabla tienen que referenciarla =?????
---

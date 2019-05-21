@@ -53,8 +53,7 @@ public class DataBase {
 				}
 				return false;}
 	 }
-	 
-	 public static String[] executeMySQLQuery(){
+	public static String[] executeMySQLQuery(){
 	        @SuppressWarnings("rawtypes")
 	        String BD[]=new String[0];
 			try {
@@ -101,7 +100,6 @@ public class DataBase {
 	        }
 			return BD;
 	    }
-	 
 	public static void AgregarBaseDeDatos(String nombre) throws SQLException {
 		try {
 			stmt=dbConnection.createStatement();
@@ -193,95 +191,75 @@ public class DataBase {
         stmt.executeUpdate(table);
         DataBase.tabla=null;
 	}
-	public static void AgregarRegistro() throws SQLException {
-		DatabaseMetaData metadata = dbConnection.getMetaData();
-		 
-		 
-		  // Specify the type of object; in this case we want tables
-		 
-		String BD[]=new String[0];
-		ResultSet resultSet = metadata.getColumns(dataBase, null, tabla, "%");
+	public static void AgregarRegistro(Object[] datos,String namess[], String typess[]) throws SQLException {
 		
-	      // get the column names from the ResultSet
-		int cont=0;
-		String querys="";
-		int primero=0;
-		int postypes=0;
-		int posnames=0;
-		String typess[]=new String[0];
-		String namess[]=new String[0];
-		  while (resultSet.next()) {
-		 
-		    String tableName = resultSet.getString("COLUMN_NAME");
-		    String type = resultSet.getString("TYPE_NAME");
-		    
-		 
-		    if(primero==0) {
-		    	 primero=1;
-		    }
-		    else {
-		    	if(primero==1) {
-		    		querys=querys+tableName;
-		    		typess=Arrays.copyOf(typess, typess.length+1);
-		    		typess[postypes]=type;
-				    postypes++;
-				    namess=Arrays.copyOf(namess, namess.length+1);
-		    		namess[posnames]=tableName;
-				    posnames++;
-			    	 primero=2;
-			    }
-		    	else {
-		    	 querys=querys+", "+tableName;
-		    	 namess=Arrays.copyOf(namess, namess.length+1);
-		    		namess[posnames]=tableName;
-				    posnames++;
-		    	 typess=Arrays.copyOf(typess, typess.length+1);
-				    typess[postypes]=type;
-				    postypes++;
-		    	}
-		    }
-		    cont++;
-		 
-		  }
-		String preguntas="?";
-		for(int i=0;i<cont-2;i++) {
-			preguntas=preguntas+", ?";
-		}
-		String query = " insert into "+ tabla + " ("+querys+")"
-		        + " values ("+preguntas+")";
-
-		      // create the mysql insert preparedstatement
-		      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
-		      
+			 String querys="";
+		     for(int i=0;i<namess.length;i++) {
+		    	 if(i!=0) {
+		    	 querys=querys+", "+namess[i];
+		    	 }
+		    	 else {
+		         querys=namess[i]; 
+		    	 }
+		     }
+		     String preguntas="?";
+		     for(int i=0;i<namess.length-1;i++) {
+		    	 preguntas=preguntas+", ?";
+		     }
 		     
-		      
-		     Entradas inputs=new Entradas();
+		    String query = " insert into "+ DataBase.tabla + " ("+querys+")"
+				        + " values ("+preguntas+")";
+		     PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
+		 
 		      for(int i=0;i<typess.length;i++) {
 		    	  System.out.println(typess[i]);
 		    	  if(typess[i].equals("INT")){
-		    		  int num_ingresado=inputs.leerInt(namess[i],0,1000000000);
-		    		  preparedStmt.setInt    ((i+1), num_ingresado);
+		    		  preparedStmt.setInt((i+1),(int)(datos[i]));
 		    	  }
 		    	  if(typess[i].equals("VARCHAR")){
-		    		  String num_ingresado=inputs.leerString(namess[i]);
-		    		  preparedStmt.setString((i+1), num_ingresado);
+		    		  preparedStmt.setString((i+1),(String)(datos[i]));
 		    	  }
 		    	  if(typess[i].equals("FLOAT")){
-		    		  float num_ingresado=(float) inputs.leerfloat(namess[i],0,10000000);
-		    		  preparedStmt.setFloat((i+1), num_ingresado);
+		    		  preparedStmt.setFloat((i+1),(float)(datos[i]));
 		    	  }
 		    	  if(typess[i].equals("TEXT")){
-		    		  String num_ingresado=inputs.leerString(namess[i]);
-		    		  preparedStmt.setString((i+1), num_ingresado);
+		    		  preparedStmt.setString((i+1),(String)(datos[i]));
 		    	  }
 		    	 
-		    	  
-		    	  
 		      }
-		      
-		      preparedStmt.execute();
-		      
+	    	  preparedStmt.execute();
+	    	 
 		      
 	}
+	
+	public static void EliminarRegistro(String campo,  String dato) throws SQLException {
+		// our SQL SELECT query. 
+	      // if you only need a few columns, specify them by name instead of using "*"
+	      String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
+	      System.out.println(querys);
 
+	      // create the java statement
+	      Statement st = dbConnection.createStatement();
+	      
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      
+	      // iterate through the java resultset
+	      	  int id=0;
+	      	  while(rs.next()) {
+	    	  id = rs.getInt("id");
+	    	  }
+	
+	        
+	        // print the result
+		
+		String query = "delete from "+tabla+" where id = "+id;
+	      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
+	      preparedStmt.execute();
+	      }
 }
+
+
+
+
+
