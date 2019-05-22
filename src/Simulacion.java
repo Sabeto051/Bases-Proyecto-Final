@@ -1,3 +1,7 @@
+import java.sql.SQLException;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Simulacion {
 	private Entradas input;
@@ -7,7 +11,7 @@ public class Simulacion {
 		this.input = new Entradas();
 	}
 
-	public void ingreso() {
+	public void ingreso() throws ClassNotFoundException, SQLException {
 		System.out.println("Bienvenido a Nisand");
 		System.out.println("1. Register\n2. Login\n3. Login Admin");
 		int option = this.input.leerInt("opcion deseada", 1, 3);
@@ -25,7 +29,25 @@ public class Simulacion {
 		}
 	}
 
-	public void loginAdmin() {
+	public void loginAdmin() throws ClassNotFoundException, SQLException {
+		Accesos Acces=new Accesos();
+		JFrame frame = new JFrame("Exiting");
+		boolean salio=false;
+		while(salio==false) {
+			int accion=Acces.Ingreso(false);
+			if(accion!=-1) {
+			}
+			else {
+				salio=true;
+				JOptionPane.showMessageDialog(frame,
+						"Adios",
+						"   Exiting",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+			System.out.println();
+		}
+		frame.dispose();
+		Entradas.reader.close();
 		// Conecta tabla de usuarios
 		// Se muestra lo que posada había hecho al inicio
 
@@ -221,9 +243,8 @@ public class Simulacion {
 		mostrarForoMenu();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		Simulacion s = new Simulacion();
-
 		s.ingreso();
 	}
 

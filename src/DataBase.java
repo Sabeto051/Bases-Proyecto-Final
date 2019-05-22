@@ -191,6 +191,13 @@ public class DataBase {
         stmt.executeUpdate(table);
         DataBase.tabla=null;
 	}
+	
+	
+	
+	//Utilizar estos metodos desde aca
+	public static void accederATabla(String nombre_tabla) {
+		tabla=nombre_tabla;
+	}
 	public static void AgregarRegistro(Object[] datos,String namess[], String typess[]) throws SQLException {
 		System.out.println("Agregar registro a tabla "+tabla);
 			 String querys="";
@@ -231,7 +238,6 @@ public class DataBase {
 	    	 
 		      
 	}
-	
 	public static void EliminarRegistro(String campo,  String dato) throws SQLException {
 		int id=buscarExistente(campo, dato);
 		if(id>0) {
