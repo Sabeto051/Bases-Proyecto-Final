@@ -1,3 +1,4 @@
+
 public class Simulacion {
 	private Entradas input;
 	private int telefono;
@@ -26,7 +27,7 @@ public class Simulacion {
 
 	public void loginAdmin() {
 		// Conecta tabla de usuarios
-		// Se muestra lo que posada habÌa hecho al inicio
+		// Se muestra lo que posada hab√≠a hecho al inicio
 
 	}
 	public void registerUser() {
@@ -40,7 +41,7 @@ public class Simulacion {
 	}
 	public void loginUser() {
 		// Conecta con la tabla de usuarios
-		// pide n˙mero y contraseÒa
+		// pide n√∫mero y contrase√±a
 		this.telefono = this.input.leerInt("Telefono", 0, 1000000000);
 		this.input.leerString("Contrasena");
 		mostrarPlanUser();
@@ -78,7 +79,7 @@ public class Simulacion {
 	}
 	
 	public void mostrarPreguntasUserRespuesta() {
-		// Creo que este metodo se puede combinar con otro que est· m·s abajo 
+		// Creo que este metodo se puede combinar con otro que est√° m√°s abajo 
 	}
 	
 	public void mostrarCursosCompletados() {
@@ -98,7 +99,7 @@ public class Simulacion {
 	}
 	public void mostrarEscuelas() {
 		// Se conecta con la tabla Escuelas
-		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas est·n en todos los planes)
+		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas est√°n en todos los planes)
 
 		// se muestran las escuelas
 		// se escoge una escuela
@@ -214,4 +215,16 @@ public class Simulacion {
 		this.input.leerString("Cualquier tecla para Responder\n\n\n");
 		mostrarPreguntas();
 	}
+	public void crearPregunta() {
+		// Se conecta con tabla usuarios, foro, pregunta
+		this.input.leerString("Pregunta: ");
+		mostrarForoMenu();
+	}
+
+	public static void main(String[] args) {
+		Simulacion s = new Simulacion();
+
+		s.ingreso();
+	}
+
 }
