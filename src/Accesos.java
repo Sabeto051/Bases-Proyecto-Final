@@ -52,7 +52,7 @@ public void AccederABD() throws SQLException, ClassNotFoundException {
 	/**/
 	int baseD=0;
 	for(int i=0;i<BD.length;i++) {
-		if(BD[i].equals("Nisand")) {
+		if(BD[i].equals("nisand")) {
 		baseD=i+1;
 		}
 	}
@@ -305,10 +305,10 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 			}
 			else {
 				cls();
+				int id=inputs.leerInt("el ID del registro", 1, 1000000000);
 				String campo=inputs.leerString("campo");
-				String valor=inputs.leerString("valor a cambiar");
 				String input=inputs.leerString("input");
-				DataBase.ModificarRegistro(campo,valor, input);
+				DataBase.ModificarRegistro(id,campo, input);
 				
 			}
 		}

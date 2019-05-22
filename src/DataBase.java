@@ -249,7 +249,7 @@ public class DataBase {
 			System.out.println("No se encontro registro a eliminar");
 		}
 	}
-	public static void ModificarRegistro(String campo, String datoAnt, Object dato) throws SQLException {
+	public static void ModificarRegistroUnico(String campo, String datoAnt, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
 		int id=buscarExistente(campo, datoAnt);
@@ -271,7 +271,62 @@ public class DataBase {
 		}else {
 			System.out.println("No se encontro registro a eliminar");
 		}
+		int idArray[] =buscarExistenteArray(campo, datoAnt);
+		mostrarIDSconCampo(idArray, "contenido");
 	      }
+	
+	public static void ModificarRegistro(int id,String campo, Object dato) throws SQLException {
+		// our SQL SELECT query. 
+	      // if you only need a few columns, specify them by name instead of using "*"
+		String datoAnt="";
+		if(id>0) {
+		datoAnt=buscarValorDeCampoSegunID(id, campo).toString();
+	      String query = "update "+tabla+" set "+campo+" = ? where id = "+id;
+	      
+	      PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
+	      		  if(dato instanceof Integer) {
+	      		  preparedStmt.setInt(1, (Integer)dato);    
+	      		  }
+			      if(dato instanceof Float) {
+			      preparedStmt.setFloat(1, (Float)dato);  
+			      		  }
+			      		
+				  if(dato instanceof String) {
+				  preparedStmt.setString (1, (String)dato);  
+				      		  }
+	      	 preparedStmt.execute();
+		}else {
+			System.out.println("No se encontro registro a eliminar");
+		}
+		int idArray[] =buscarExistenteArray(campo, datoAnt);
+		mostrarIDSconCampo(idArray, "contenido");
+	      }
+	public static void ModificarRegistroCascada(String campo, String datoAnt, Object dato) throws SQLException {
+		// our SQL SELECT query. 
+	      // if you only need a few columns, specify them by name instead of using "*"
+		int id[]=buscarExistenteArray(campo, datoAnt);
+		
+		for(int i=0;i<id.length;i++){if(id[i]>0) {
+	      String query = "update "+tabla+" set "+campo+" = ? where id = "+id[i];
+	      
+	      PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
+	      		  if(dato instanceof Integer) {
+	      		  preparedStmt.setInt(1, (Integer)dato);    
+	      		  }
+			      if(dato instanceof Float) {
+			      preparedStmt.setFloat(1, (Float)dato);  
+			      		  }
+			      		
+				  if(dato instanceof String) {
+				  preparedStmt.setString (1, (String)dato);  
+				      		  }
+	      	 preparedStmt.execute();
+		}else {
+			System.out.println("No se encontro registro a eliminar");
+		}
+	}
+	      }
+	
 	public static int buscarExistente(String campo,  String dato) throws SQLException {
 		 String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
 
@@ -286,8 +341,66 @@ public class DataBase {
 	      	  while(rs.next()) {
 	    	  id = rs.getInt("id");
 	    	  }
-	      	  System.out.println(id);
 	      	  return id;
+	}
+	public static Object buscarValorDeCampoSegunID(int id,String campo) throws SQLException {
+		DatabaseMetaData metadata = dbConnection.getMetaData();
+	      ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, campo);
+	      String tipo_campo ="";
+	      while (resultSet.next()) {
+	    	 tipo_campo = resultSet.getString("TYPE_NAME");
+	      }
+		String querys = "SELECT * FROM "+tabla+" WHERE id"+"="+id+";";
+	      // create the java statement
+	      Statement st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      // iterate through the java resultset
+	      	  Object campoMostrar="";
+	      	  while(rs.next()) {
+	      		if(tipo_campo.equalsIgnoreCase("INT")){
+	      			campoMostrar =rs.getInt(campo);
+	      			return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("VARCHAR")){
+		    		  campoMostrar = rs.getString(campo);
+		    		  return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("FLOAT")){
+		    			campoMostrar = rs.getFloat(campo);
+		    			return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("TEXT")){
+		    		  campoMostrar = rs.getString(campo);
+		    		  return campoMostrar;
+		    	  }
+	      	  }
+	      	  return "";
+	}
+	public static int[] buscarExistenteArray(String campoParaBuscar,  String datoABuscar) throws SQLException {
+		 String querys = "SELECT * FROM "+tabla+" WHERE "+campoParaBuscar+"='"+datoABuscar+"';";
+	      // create the java statement
+	      Statement st = dbConnection.createStatement();
+	      
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      
+	      // iterate through the java resultset
+	      	  int id[]= new int[0];
+	      	  int cont=0;
+	      	  while(rs.next()) {
+	      	  id=Arrays.copyOf(id, id.length+1);
+	    	  id[cont] = rs.getInt("id");
+	    	  cont++;
+	    	  }
+	      	  return id;
+	}
+	public static void mostrarIDSconCampo(int id[],String campo) throws SQLException {
+		System.out.println("id"+"    "+campo);
+		for(int i=0;i<id.length;i++) {
+			String campoMostrar=buscarValorDeCampoSegunID(id[i], campo).toString();
+	      	 System.out.println(id[i]+"    "+campoMostrar);
+		}
 	}
 }	
 
