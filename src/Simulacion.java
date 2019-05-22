@@ -5,8 +5,6 @@ import javax.swing.JOptionPane;
 
 public class Simulacion {
 	private Entradas input;
-	private int telefono;
-	private int plan;
 	public Simulacion() {
 		this.input = new Entradas();
 	}
@@ -245,6 +243,7 @@ public class Simulacion {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		Simulacion s = new Simulacion();
+		DataBase.Connect("nisand");
 		s.ingreso();
 	}
 
