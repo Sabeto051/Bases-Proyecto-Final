@@ -9,13 +9,13 @@ public class Menus {
 	
 	}
 	public String[] MenuUsuarioContrasenaBD() {
-		System.out.println("Ingrese Usuario (en blanco se considerará root)");
-		String usuario="";//inputs.leerString(" el Usuario");
+		System.out.println("Ingrese Usuario (en blanco se considerarï¿½ root)");
+		String usuario=inputs.leerString(" el Usuario");
 		if(usuario.equals("")) {
 			usuario="root";
 		}
 		System.out.println("Ingrese Contrasena");
-		String contrasena="holahola123";//inputs.leerString(" la contrasena");
+		String contrasena=inputs.leerString(" la contrasena");
 		String cred[]=new String[2];
 		
 		cred[0]=usuario;

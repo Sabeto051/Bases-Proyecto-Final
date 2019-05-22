@@ -9,7 +9,7 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.sun.corba.se.impl.orb.ParserTable.TestAcceptor1;
+
 
 public class Accesos {
 private Entradas inputs=new Entradas();
@@ -52,7 +52,7 @@ public void AccederABD() throws SQLException, ClassNotFoundException {
 	/**/
 	int baseD=0;
 	for(int i=0;i<BD.length;i++) {
-		if(BD[i].equals("nisand")) {
+		if(BD[i].equals("Nisand")) {
 		baseD=i+1;
 		}
 	}
