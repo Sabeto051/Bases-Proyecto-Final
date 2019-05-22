@@ -5,6 +5,9 @@ import javax.swing.JOptionPane;
 
 public class Simulacion {
 	private Entradas input;
+	private int usuarios_id;
+	private int foros_id;
+	private int preguntas_id;
 	public Simulacion() {
 		this.input = new Entradas();
 	}
@@ -216,6 +219,7 @@ public class Simulacion {
 	public void mostrarRespuestas() {
 		System.out.println("Respesutas de la pregunta CONTENIDO PREGUNTA");
 		// Se muestran las respuestas de la pregunta
+		SimulacionUtilities.mostrarRespuestas(preguntas_id);
 		System.out.println("1. Responder Pregunta\n2. retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 2);
 		switch (option) {
@@ -232,11 +236,12 @@ public class Simulacion {
 	public void crearRespuesta() {
 		// Se conecta con tabla respuestas, preguntas, usuario
 		this.input.leerString("Cualquier tecla para Responder\n\n\n");
+		SimulacionUtilities.crearRespuesta(usuarios_id, preguntas_id);
 		mostrarPreguntas();
 	}
 	public void crearPregunta() {
 		// Se conecta con tabla usuarios, foro, pregunta
-		this.input.leerString("Pregunta: ");
+		SimulacionUtilities.crearPregunta(usuarios_id, foros_id);
 		mostrarForoMenu();
 	}
 
