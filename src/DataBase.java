@@ -192,7 +192,7 @@ public class DataBase {
         DataBase.tabla=null;
 	}
 	public static void AgregarRegistro(Object[] datos,String namess[], String typess[]) throws SQLException {
-		
+		System.out.println("Agregar registro a tabla "+tabla);
 			 String querys="";
 		     for(int i=0;i<namess.length;i++) {
 		    	 if(i!=0) {
@@ -233,36 +233,23 @@ public class DataBase {
 	}
 	
 	public static void EliminarRegistro(String campo,  String dato) throws SQLException {
-		// our SQL SELECT query. 
-	      // if you only need a few columns, specify them by name instead of using "*"
-	      String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
-	      System.out.println(querys);
-
-	      // create the java statement
-	      Statement st = dbConnection.createStatement();
-	      
-	      // execute the query, and get a java resultset
-	      ResultSet rs = st.executeQuery(querys);
-	      
-	      // iterate through the java resultset
-	      	  int id=0;
-	      	  while(rs.next()) {
-	    	  id = rs.getInt("id");
-	    	  }
-	
-	        
-	        // print the result
-		
+		int id=buscarExistente(campo, dato);
+		if(id>0) {
 		String query = "delete from "+tabla+" where id = "+id;
 	      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
 	      preparedStmt.execute();
 	      }
-
-	public static void ModificarRegistro(String campo,  Object dato) throws SQLException {
+		else {
+			System.out.println("No se encontro registro a eliminar");
+		}
+	}
+	public static void ModificarRegistro(String campo, String datoAnt, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
-	      String query = " insert into "+ DataBase.tabla + " ("+campo+")"
-			        + " values (?) "+" WHERE "+campo+"='"+dato.toString()+"';";
+		int id=buscarExistente(campo, datoAnt);
+		if(id>0) {
+	      String query = "update "+tabla+" set "+campo+" = ? where id = "+id;
+	      
 	      PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
 	      		  if(dato instanceof Integer) {
 	      		  preparedStmt.setInt(1, (Integer)dato);    
@@ -275,8 +262,28 @@ public class DataBase {
 				  preparedStmt.setString (1, (String)dato);  
 				      		  }
 	      	 preparedStmt.execute();
+		}else {
+			System.out.println("No se encontro registro a eliminar");
+		}
 	      }
-}
+	public static int buscarExistente(String campo,  String dato) throws SQLException {
+		 String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
+
+	      // create the java statement
+	      Statement st = dbConnection.createStatement();
+	      
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      
+	      // iterate through the java resultset
+	      	  int id=-1;
+	      	  while(rs.next()) {
+	    	  id = rs.getInt("id");
+	    	  }
+	      	  System.out.println(id);
+	      	  return id;
+	}
+}	
 
 
 

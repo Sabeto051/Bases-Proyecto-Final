@@ -306,8 +306,10 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 			else {
 				cls();
 				String campo=inputs.leerString("campo");
+				String valor=inputs.leerString("valor a cambiar");
 				String input=inputs.leerString("input");
-				DataBase.EliminarRegistro(campo, input);
+				DataBase.ModificarRegistro(campo,valor, input);
+				
 			}
 		}
 		

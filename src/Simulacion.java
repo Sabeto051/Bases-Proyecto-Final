@@ -177,7 +177,7 @@ public class Simulacion {
 
 	public void mostrarPreguntas() {
 		// Se conecta con tablas preguntas 
-		// Se muestran las preguntas del foro
+		// Se muestran las preguntas del j
 		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
 		mostrarPreguntaMenu();
 	}
