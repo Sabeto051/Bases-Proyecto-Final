@@ -46,14 +46,13 @@ public class Simulacion {
 		}
 		frame.dispose();
 		Entradas.reader.close();
-		// Conecta tabla de usuarios
-		// Se muestra lo que posada había hecho al inicio
-
 	}
 	public void registerUser() {
 		// Conecta con la tabla de usuarios
+		DataBase.accederATabla("Usuario");
 		// Crea un nuevo usuario con Plan (porque es obligatiorio)
-		this.telefono = this.input.leerInt("Telefono", 0, 1000000000);
+		
+		telefono = this.input.leerInt("Telefono", 0, 1000000000);
 		this.input.leerString("Contrasena");
 		// Se muestran los planes
 		this.input.leerString("Numero del plan");
