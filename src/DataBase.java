@@ -326,7 +326,6 @@ public class DataBase {
 		}
 	}
 	      }
-	
 	public static int buscarExistente(String campo,  String dato) throws SQLException {
 		 String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
 
