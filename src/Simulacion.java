@@ -8,6 +8,7 @@ public class Simulacion {
 	private int usuarios_id;
 	private int foros_id;
 	private int preguntas_id;
+	
 	public Simulacion() {
 		this.input = new Entradas();
 	}
@@ -54,7 +55,7 @@ public class Simulacion {
 		// Conecta con la tabla de usuarios
 		DataBase.accederATabla("Usuario");
 		// Crea un nuevo usuario con Plan (porque es obligatiorio)
-
+		
 		this.input.leerInt("Telefono", 0, 1000000000);
 		this.input.leerString("Contrasena");
 		// Se muestran los planes

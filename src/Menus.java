@@ -9,7 +9,7 @@ public class Menus {
 	
 	}
 	public String[] MenuUsuarioContrasenaBD() {
-		System.out.println("Ingrese Usuario (en blanco se considerar� root)");
+		System.out.println("Ingrese Usuario (en blanco se consideraria root)");
 		String usuario=inputs.leerString(" el Usuario");
 		if(usuario.equals("")) {
 			usuario="root";
