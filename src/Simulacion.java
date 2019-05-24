@@ -157,14 +157,19 @@ public class Simulacion {
 		}
 
 	}
+
 	public void mostrarPreguntasUser() {
 		// Se muestran las preguntas hechas por el usuario
 		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
 		mostrarPreguntasUserRespuesta();
 	}
+
+
+
 	public void mostrarPreguntasUserRespuesta() {
 		// Creo que este metodo se puede combinar con otro que está más abajo 
 	}
+
 	public void mostrarCursosCompletados() throws SQLException {
 		// Se conecta con tabla Cursos , Usuarios y  Estudaintes-Cursos
 		// Se muestran los cursos completados
@@ -324,12 +329,14 @@ public class Simulacion {
 	public void mostrarPreguntas() throws SQLException {
 		// Se conecta con tablas preguntas 
 		// Se muestran las preguntas del j
-		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
+		this.preguntas_id = SimulacionUtilities.mostrarPreguntas(foros_id);
+		System.out.println("\n\n\n");
 		mostrarPreguntaMenu();
 	}
 	public void mostrarPreguntaMenu() throws SQLException {
 		System.out.println("1. Ver Respuestas a la pregunta\n2. Retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 2);
+		System.out.println("\n\n\n");
 		switch (option) {
 		case 1:
 			mostrarRespuestas();
@@ -345,6 +352,7 @@ public class Simulacion {
 		SimulacionUtilities.mostrarRespuestas(preguntas_id);
 		System.out.println("1. Responder Pregunta\n2. retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 2);
+		System.out.println("\n\n\n");
 		switch (option) {
 		case 1:
 			crearRespuesta();
@@ -353,17 +361,18 @@ public class Simulacion {
 			mostrarPreguntas();
 			break;
 		}
-		
+
 	}
 	public void crearRespuesta() throws SQLException {
 		// Se conecta con tabla respuestas, preguntas, usuario
-		this.input.leerString("Cualquier tecla para Responder\n\n\n");
 		SimulacionUtilities.crearRespuesta(usuarios_id, preguntas_id);
+		System.out.println("\n\n\n");
 		mostrarPreguntas();
 	}
 	public void crearPregunta() throws SQLException {
 		// Se conecta con tabla usuarios, foro, pregunta
 		SimulacionUtilities.crearPregunta(usuarios_id, foros_id);
+		System.out.println("\n\n\n");
 		mostrarForoMenu();
 	}
 	
@@ -382,8 +391,14 @@ public class Simulacion {
 		}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		Menus menu = new Menus();
+		
+		String cred[]=menu.MenuUsuarioContrasenaBD();
+		DataBase.username=cred[0];
+		DataBase.password=cred[1];
+		
 		Simulacion s = new Simulacion();
-		DataBase.Connect("nisand");
+		DataBase.Connect("Nisand");
 		s.ingreso();
 	}
 

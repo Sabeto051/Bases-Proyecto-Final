@@ -23,8 +23,8 @@ public class DataBase {
 	    
 	    */
 	    static Connection dbConnection = null; 
-	    static String username = "root"; // replace with your MySQL client username
-	    static String password = "holahola123"; // replace with your MySQL client password
+	    static String username = "santiago"; // replace with your MySQL client username
+	    static String password = "asdf"; // replace with your MySQL client password
 	    static String tabla="";
 	    static String dataBase="";
 	    static Statement stmt = null;
@@ -54,7 +54,7 @@ public class DataBase {
 					System.out.println("Acceso Denegado Base de Datos inexistente");
 				}
 				else {
-					System.out.println("Acceso Denegado Por Usuario o Contraseña Errados");
+					System.out.println("Acceso Denegado Por Usuario o Contraseï¿½a Errados");
 				}
 				return false;}
 	 }
@@ -199,8 +199,10 @@ public class DataBase {
 	
 	
 	
-	//Utilizar estos metodos desde aca
-	public static void accederATabla(String nombre_tabla) throws SQLException {
+
+	//Utilizar estos metodos desde aca crud
+	public static void accederATabla(String nombre_tabla) {
+
 		tabla=nombre_tabla;
 	}
 	public static void mostrarTabla(String ids,String nombre_tabla) throws SQLException {
