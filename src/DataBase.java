@@ -33,7 +33,7 @@ public class DataBase {
 	    static String dataBase="";
 	    static Statement stmt = null;
         static ResultSet resultset = null;
-	    
+	    static int espacioEntreCol=23;
 	    
 	 public static boolean Connect(String database_name) {
 			
@@ -914,7 +914,7 @@ public class DataBase {
 	}
 	
 	public static int [] mostrarTablaSegunCriterio(String tablaASegmentar,String campoParaSegmentar, String campoASeleccionar,
-			String tablaIntermedia, String campoParaFiltrar, int dato) throws SQLException {
+		String tablaIntermedia, String campoParaFiltrar, int dato) throws SQLException {
 		accederATabla(tablaIntermedia);
 		 
 		String querys = "SELECT * FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+"=("+
@@ -958,34 +958,48 @@ public class DataBase {
 	     int tamaño= rs.getMetaData().getColumnCount();	  
 	    
 	     for(int i=2;i<tamaño+1;i++) {
-	    	 int espacios=25-rs.getMetaData().getColumnName(i).length();
+	    	 int espacios=espacioEntreCol-rs.getMetaData().getColumnName(i).length();
      		  String spaces="";
      		  for(int k=0;k<espacios;k++) {
      			  spaces=spaces+" ";
      		  }
-      			System.out.print(rs.getMetaData().getColumnName(i)+"                     ");
+      			System.out.print(rs.getMetaData().getColumnName(i)+spaces);
       		 }
 	     System.out.println();
 	     while(rs.next()) {
 	      	  for(int i=2;i<tamaño+1;i++) {
 	      		  String type=rs.getMetaData().getColumnTypeName(i);
-	      		  int espacios=25-type.length();
-	      		  String spaces="";
-	      		  for(int k=0;k<espacios;k++) {
-	      			  spaces=spaces+" ";
-	      		  }
-	      		  
+	      		  int espacios=0;
 	      		if(type.equalsIgnoreCase("INT")){
+	      			espacios=espacioEntreCol-Integer.toString(rs.getInt(i)).length();
+	      			String spaces="";
+		      		  for(int k=0;k<espacios;k++) {
+		      			  spaces=spaces+" ";
+		      		  }
 	      			System.out.print(rs.getInt(i)+spaces);
-	      			
 		    	  }
 		    	  if(type.equalsIgnoreCase("VARCHAR")){
+		    		  espacios=espacioEntreCol-rs.getString(i).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
 		    		  System.out.print(rs.getString(i)+spaces);
 		    	  }
 		    	  if(type.equalsIgnoreCase("FLOAT")){
+		    		  espacios=espacioEntreCol-Float.toString(rs.getFloat(i)).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
 		    		  System.out.print(rs.getFloat(i)+spaces);
 		    	  }
 		    	  if(type.equalsIgnoreCase("TEXT") || type.equalsIgnoreCase("DATETIME")){
+		    		  espacios=espacioEntreCol-rs.getString(i).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
 		    		  System.out.print(rs.getString(i)+spaces);
 		    		  }
 	      	  }

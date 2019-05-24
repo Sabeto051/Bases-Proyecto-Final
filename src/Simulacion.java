@@ -196,7 +196,8 @@ public class Simulacion {
 		DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		Date date22=c.getTime();
 		String fechaHoy=dateFormat1.format(date22);
-		
+		DateFormat dateFormat2 = new SimpleDateFormat("kk:mm:ss");
+		String horaActual=dateFormat2.format(date22);
 		
 		if(plan_id>0) {
 			System.out.println("Usuario ya tiene plan existente. Desea cambiarlo?\n1. Si\n2. No");
@@ -243,15 +244,15 @@ public class Simulacion {
 				dateS2="0"+date2;
 			}
 		
-			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
-			System.out.println(fechaHoy);
-			System.out.println(fecha);
+			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
 			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
-			if(comp>0) {
+			if(comp<0) {
 				//System.out.println("despues de hoy");
 			}
 			else {
 				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				System.out.println("Fecha Hoy:                 "+fechaHoy);
+				System.out.println("Fecha Ingresada No Valida: "+fecha);
 				aceptada=false;
 			}
 			}
@@ -289,15 +290,15 @@ public class Simulacion {
 				dateS2="0"+date2;
 			}
 		
-			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
-			System.out.println(fechaHoy);
-			System.out.println(fecha);
+			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
 			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
-			if(comp>0) {
+			if(comp<0) {
 				//System.out.println("despues de hoy");
 			}
 			else {
 				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				System.out.println("Fecha Hoy:                 "+fechaHoy);
+				System.out.println("Fecha Ingresada No Valida: "+fecha);
 				aceptada=false;
 			}
 		}
