@@ -14,7 +14,6 @@ public class Entradas {
 			reader=new Scanner(System.in);
 			System.out.print("Ingrese "+valor+" ");
 			a=Integer.parseInt(reader.nextLine());
-			//float a=(float)reader.nextfloat();
 			System.out.println();
 			if((a<min || a>max)) {
 				error=true;
@@ -27,12 +26,14 @@ public class Entradas {
 				System.out.println();
 				if(a<min || a>max) {
 					error=true;
-					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo entero");
 				}
 			}
 		}
 		catch(InputMismatchException | NumberFormatException e) {
-			System.out.println("Hubo un error. Valor Ingresado debe ser float");
+			System.out.println("Hubo un error. Valor Ingresado debe ser entero");
+			System.out.println(a);
+			System.out.println(max);
 			error=true;
 		}
 		}

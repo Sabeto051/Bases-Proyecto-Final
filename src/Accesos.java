@@ -224,91 +224,21 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 		
 		if(baseD==1) {
 			cls();
-			DatabaseMetaData metadata = DataBase.dbConnection.getMetaData();
-			 
-			 
-			  // Specify the type of object; in this case we want tables
-			 
-			String BD[]=new String[0];
-			ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, "%");
-			
-		      // get the column names from the ResultSet
-			int cont=0;
-			String querys="";
-			int primero=0;
-			int postypes=0;
-			int posnames=0;
-			String typess[]=new String[0];
-			String namess[]=new String[0];
-			  while (resultSet.next()) {
-			 
-			    String tableName = resultSet.getString("COLUMN_NAME");
-			    String type = resultSet.getString("TYPE_NAME");
-			    
-			 
-			    if(primero==0) {
-			    	 primero=1;
-			    }
-			    else {
-			    	if(primero==1) {
-			    		querys=querys+tableName;
-			    		typess=Arrays.copyOf(typess, typess.length+1);
-			    		typess[postypes]=type;
-					    postypes++;
-					    namess=Arrays.copyOf(namess, namess.length+1);
-			    		namess[posnames]=tableName;
-					    posnames++;
-				    	 primero=2;
-				    }
-			    	else {
-			    	 querys=querys+", "+tableName;
-			    	 namess=Arrays.copyOf(namess, namess.length+1);
-			    		namess[posnames]=tableName;
-					    posnames++;
-			    	 typess=Arrays.copyOf(typess, typess.length+1);
-					    typess[postypes]=type;
-					    postypes++;
-			    	}
-			    }
-			    cont++;
-			 
-			  }
-			      
-			     
-			     Object[] datos=new Object[typess.length];
-			     Entradas inputs=new Entradas();
-			      for(int i=0;i<typess.length;i++) {
-			    	  System.out.println(typess[i]);
-			    	  if(typess[i].equals("INT")){
-			    		 datos[i]=inputs.leerInt(namess[i],0,1000000000);
-			    	  }
-			    	  if(typess[i].equals("VARCHAR")){
-			    		  datos[i]=inputs.leerString(namess[i]);
-			    	  }
-			    	  if(typess[i].equals("FLOAT")){
-			    		  datos[i]=(float) inputs.leerfloat(namess[i],0,10000000);
-			    	  }
-			    	  if(typess[i].equals("TEXT")){
-			    		  datos[i]=inputs.leerString(namess[i]);
-			    	  }
-			    	 
-			    	  
-			    	  
-			      }
-			      DataBase.AgregarRegistro(datos,namess,typess);
+				  String campo=inputs.leerString("campo unico ademas de ID, si no hay oprima enter");
+			      DataBase.AgregarRegistro(DataBase.tabla,campo);
 		}else {
 			if(baseD==2) {
 			cls();
 			String campo=inputs.leerString("campo");
 			String input=inputs.leerString("input");
-			DataBase.EliminarRegistro(campo, input);
+			DataBase.EliminarRegistro("id",campo, input);
 			}
 			else {
 				cls();
 				int id=inputs.leerInt("el ID del registro", 1, 1000000000);
 				String campo=inputs.leerString("campo");
 				String input=inputs.leerString("input");
-				DataBase.ModificarRegistro(id,campo, input);
+				DataBase.ModificarRegistro("id",id,campo, input);
 				
 			}
 		}
