@@ -32,10 +32,8 @@ public class SimulacionUtilities {
 	
 	public static void mostrarRespuestas(int pregunta_id) {
 		try {
-			DataBase.buscarExistente("pregunta_id","pregunta_id", Integer.toString(pregunta_id));
-
-			DataBase.accederATabla("Respuestas");
-			DataBase.buscarExistente("id","pregunta_id", Integer.toString(pregunta_id));
+			DataBase.buscarExistente("Preguntas","pregunta_id","pregunta_id", Integer.toString(pregunta_id));
+			DataBase.buscarExistente("Respuestas","id","pregunta_id", Integer.toString(pregunta_id));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -45,8 +43,7 @@ public class SimulacionUtilities {
 	public static int mostrarPreguntas(int foro_id) {
 		Object[] retorno = new Object[2];
 		try {
-			DataBase.accederATabla("Preguntas");
-			DataBase.buscarExistente("id","foro_id", Integer.toString(foro_id));
+			DataBase.buscarExistente("Preguntas","id","foro_id", Integer.toString(foro_id));
 			
 			retorno[0] = inputSim.leerInt("Pregunta a escoger", 0, 100000);
 			

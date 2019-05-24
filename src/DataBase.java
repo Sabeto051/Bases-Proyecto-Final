@@ -1,11 +1,15 @@
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import javax.accessibility.AccessibleEditableText;
 
 import com.mysql.cj.conf.ConnectionUrl.Type;
 import com.mysql.cj.protocol.Resultset;
@@ -726,8 +730,9 @@ public class DataBase {
 	    	  
 		      
 	}
-	public static void EliminarRegistro(String ids,String campo,  String dato) throws SQLException {
-		int id=buscarExistente(ids,campo, dato);
+	public static void EliminarRegistro(String tabla1,String ids,String campo,  String dato) throws SQLException {
+		accederATabla(tabla1);
+		int id=buscarExistente(tabla1,ids,campo, dato);
 		if(id>0) {
 		String query = "delete from "+tabla+" where id = "+id;
 	      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
@@ -737,12 +742,12 @@ public class DataBase {
 			System.out.println("No se encontro registro a eliminar");
 		}
 	}
-	public static void ModificarRegistroUnico(String ids,String campoAnt, String datoAnt,String campo, Object dato) throws SQLException {
+	public static void ModificarRegistroUnico(String tabla1,String ids,String campoAnt, String datoAnt,String campo, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
 		
-		
-		int id=buscarExistente(ids,campoAnt, datoAnt);
+		accederATabla(tabla1);
+		int id=buscarExistente(tabla1,ids,campoAnt, datoAnt);
 		
 		if(id>0) {
 	      String query = "update "+tabla+" set "+campo+" = ? where "+ids+" = "+id;
@@ -814,8 +819,9 @@ public class DataBase {
 	}
 	      }
 
-	public static int buscarExistente(String ids,String campo,  String dato) throws SQLException {
-		 String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
+	public static int buscarExistente(String tabla1,String ids,String campo,  String dato) throws SQLException {
+		accederATabla(tabla1); 
+		String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
 
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
@@ -857,7 +863,7 @@ public class DataBase {
 		    			campoMostrar = rs.getFloat(campo);
 		    			return campoMostrar;
 		    	  }
-		    	  if(tipo_campo.equalsIgnoreCase("TEXT")){
+		    	  if(tipo_campo.equalsIgnoreCase("TEXT") || tipo_campo.equalsIgnoreCase("DATETIME") ){
 		    		  campoMostrar = rs.getString(campo);
 		    		  return campoMostrar;
 		    	  }
@@ -1014,9 +1020,10 @@ public class DataBase {
 		return Integer.parseInt(a);
 		
 	}
-	public static String sumarAFecha(String dateSS,String ids, int campoid, String tiempo) throws SQLException {
+	public static String sumarAFecha(String dateSS,String ids, int campoid, String tiempo) throws SQLException, ParseException {
 	Calendar c = Calendar.getInstance();
-	Date date22=new Date(dateSS);
+	DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	Date date22=dateFormat1.parse(dateSS);
 	c.setTime(date22); // Now use today date.
 	accederATabla("planes");
 	String plans=buscarValorDeCampoSegunID(ids,campoid,tiempo).toString();
@@ -1028,17 +1035,25 @@ public class DataBase {
 	c.add(Calendar.DATE,times);
 	}
 	if(plas2.equals("mes") || plas2.equals("meses")) {
-	c.add(Calendar.MONTH,times+1);
+	c.add(Calendar.MONTH,times);
 	}
 	if(plas2.equals("año") || plas2.equals("años")) {
 	c.add(Calendar.YEAR,times);
 	}
 	
 	date22 = c.getTime();
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	String strDate = dateFormat.format(date22);
 	return strDate;
-}	
+}
+	
+	public static double diferenciaFecha(String d1,String d2) throws SQLException, ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+		Date d11=format.parse(d1);
+		Date d12=format.parse(d2);
+		long diffInMillies = d11.getTime() - d12.getTime();
+		return diffInMillies;
+	}	
 }
 
 

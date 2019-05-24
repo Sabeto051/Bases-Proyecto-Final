@@ -14,7 +14,6 @@ public class Menus {
 		if(usuario.equals("")) {
 			usuario="root";
 		}
-		System.out.println("Ingrese Contrasena");
 		String contrasena=inputs.leerString(" la contrasena");
 		String cred[]=new String[2];
 		

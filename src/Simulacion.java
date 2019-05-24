@@ -1,9 +1,11 @@
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,7 +28,7 @@ public class Simulacion {
 			System.out.println();
 		}
 	}
-	public void ingreso() throws ClassNotFoundException, SQLException {
+	public void ingreso() throws ClassNotFoundException, SQLException, ParseException {
 		usuarios_id=0;
 		foros_id=0;
 		preguntas_id=0;
@@ -72,7 +74,7 @@ public class Simulacion {
 	
 	
 	//Metodos relacionados con interfaz usuario
-	public void registerUser() throws SQLException {
+	public void registerUser() throws SQLException, ParseException {
 		//crea nuevo usuario en tabla usuarios
 		boolean existe=true;
 		while(existe==true) {
@@ -91,7 +93,7 @@ public class Simulacion {
 		System.out.println();
 		mostrarPlanUser();
 	}
-	public void loginUser() throws SQLException {
+	public void loginUser() throws SQLException, ParseException {
 		// Conecta con la tabla de usuarios
 		DataBase.accederATabla("Usuarios");
 		// pide nÃºmero y contraseÃ±a
@@ -99,7 +101,7 @@ public class Simulacion {
 		while(error==true) {
 			error=false;
 		String tel="2";//this.input.leerString("su telefono");
-		int id=DataBase.buscarExistente("id","telefono", tel);
+		int id=DataBase.buscarExistente("usuarios","id","telefono", tel);
 		if(id==-1) {
 			System.out.println("Telefono no existe");
 			error=true;
@@ -123,7 +125,7 @@ public class Simulacion {
 		}
 		mostrarPlanUser();
 	}
-	public void mostrarPlanUser() throws SQLException {
+	public void mostrarPlanUser() throws SQLException, ParseException {
 		// Se conecta la tabla Planes
 		// Se conecta la tabla Usuarios-Planes
 		
@@ -137,6 +139,18 @@ public class Simulacion {
 		System.out.println();
 		DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
 		System.out.println();
+		System.out.println();
+		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("usuario_id", usuarios_id, "fecha_fin");
+		String f1=fecha_fin.toString();
+		Calendar c = Calendar.getInstance();
+		Date fin=c.getTime();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+		String f2 = dateFormat.format(fin);
+		double diff=DataBase.diferenciaFecha(f1, f2);
+		if(diff<0) {
+			System.out.println("Plan se venció");
+			plan_id=0;
+		}
 		System.out.println();
 		System.out.println("1. Comprar nuevo Plan\n2. Acceder a Escuelas\n3. Ver Cursos completados\n"
 				+ "4. Ver preguntas hechas");
@@ -170,14 +184,20 @@ public class Simulacion {
 		// Creo que este metodo se puede combinar con otro que estÃ¡ mÃ¡s abajo 
 	}
 
-	public void mostrarCursosCompletados() throws SQLException {
+	public void mostrarCursosCompletados() throws SQLException, ParseException {
 		// Se conecta con tabla Cursos , Usuarios y  Estudaintes-Cursos
 		// Se muestran los cursos completados
 		this.input.leerString("Cualquier tecla para retroceder\n\n\n");
 		mostrarPlanUser();
 	}
-	public void crearPlanParaUsuario() throws SQLException {
+	public void crearPlanParaUsuario() throws SQLException, ParseException {
 		boolean cambiar=true;
+		Calendar c = Calendar.getInstance();
+		DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+		Date date22=c.getTime();
+		String fechaHoy=dateFormat1.format(date22);
+		
+		
 		if(plan_id>0) {
 			System.out.println("Usuario ya tiene plan existente. Desea cambiarlo?\n1. Si\n2. No");
 			int cambio=input.leerInt("la accion a tomar",1,2);
@@ -199,52 +219,92 @@ public class Simulacion {
 		Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","Planes"));
 		DataBase.accederATabla("Usuariosplanes");
 		if(plan_id>0) {
-		DataBase.ModificarRegistroUnico("usuario_id","usuario_id",Integer.toString(usuarios_id),"plan_id",option);
+		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id","usuario_id",Integer.toString(usuarios_id),"plan_id",option);
 		plan_id=Integer.parseInt(option.toString());
+		String fecha="";
+		int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
+		if(opcion_fecha==1) {
+			fecha=fechaHoy;
+		}
+		else {
+			boolean aceptada=false;
+			while(aceptada==false) {
+			aceptada=true;
+			int date1=input.leerInt("Dia de hoy",1,31);
+			int date2=input.leerInt("Mes de hoy",1,12);
+			int date3=input.leerInt("Año de hoy",1800,10000);
+			String dateS1=Integer.toString(date1);
+			String dateS2=Integer.toString(date2);
+			String dateS3=Integer.toString(date3);
+			if(date1<10 ) {
+				dateS1="0"+date1;
+			}
+			if(date2<10) {
+				dateS2="0"+date2;
+			}
 		
-		Object datos[]=new Object[3];
-		int date1=input.leerInt("Dia de hoy",1,31);
-		int date2=input.leerInt("Mes de hoy",1,12);
-		int date3=input.leerInt("Año de hoy",1800,10000);
-		String dateS1=Integer.toString(date1);
-		String dateS2=Integer.toString(date2);
-		String dateS3=Integer.toString(date3);
-		if(date1<10 ) {
-			dateS1="0"+date1;
+			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
+			System.out.println(fechaHoy);
+			System.out.println(fecha);
+			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
+			if(comp>0) {
+				//System.out.println("despues de hoy");
+			}
+			else {
+				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				aceptada=false;
+			}
+			}
 		}
-		if(date2<10) {
-			dateS2="0"+date2;
-		}
-	
-		String dateSS=dateS1+"/"+dateS2+"/"+dateS3;
-		String fecha=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
-		datos[0]=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
-		String fecha2= DataBase.sumarAFecha(dateSS,"id", plan_id, "duracion");
+		Object datos[]=new Object[2];
+		datos[0]=fecha;
+		String fecha2= DataBase.sumarAFecha(fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
-		DataBase.ModificarRegistroUnico("usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
-		DataBase.ModificarRegistroUnico("usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
+		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
+		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
 		
 		
 		}
 		else {
 		plan_id=Integer.parseInt(option.toString());
+		String fecha="";
+		int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
+		if(opcion_fecha==1) {
+			fecha=fechaHoy;
+		}
+		else {
+			boolean aceptada=false;
+			while(aceptada==false) {
+			aceptada=true;
+			int date1=input.leerInt("Dia de hoy",1,31);
+			int date2=input.leerInt("Mes de hoy",1,12);
+			int date3=input.leerInt("Año de hoy",1800,10000);
+			String dateS1=Integer.toString(date1);
+			String dateS2=Integer.toString(date2);
+			String dateS3=Integer.toString(date3);
+			if(date1<10 ) {
+				dateS1="0"+date1;
+			}
+			if(date2<10) {
+				dateS2="0"+date2;
+			}
+		
+			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
+			System.out.println(fechaHoy);
+			System.out.println(fecha);
+			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
+			if(comp>0) {
+				//System.out.println("despues de hoy");
+			}
+			else {
+				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				aceptada=false;
+			}
+		}
+		}
 		Object datos[]=new Object[3];
-		int date1=input.leerInt("Dia de hoy",1,31);
-		int date2=input.leerInt("Mes de hoy",1,12);
-		int date3=input.leerInt("Año de hoy",1800,10000);
-		String dateS1=Integer.toString(date1);
-		String dateS2=Integer.toString(date2);
-		String dateS3=Integer.toString(date3);
-		if(date1<10 ) {
-			dateS1="0"+date1;
-		}
-		if(date2<10) {
-			dateS2="0"+date2;
-		}
-	
-		String dateSS=dateS1+"/"+dateS2+"/"+dateS3;
-		datos[0]=dateS3+"-"+dateS2+"-"+dateS1+ " 12:00:00";
-		String fecha2= DataBase.sumarAFecha(dateSS,"id", plan_id, "duracion");
+		datos[0]=fecha;
+		String fecha2= DataBase.sumarAFecha(fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
 		datos[2]=plan_id;
 		DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "Usuariosplanes", "usuario_id", datos);
@@ -379,7 +439,7 @@ public class Simulacion {
 	
 	
 	//Metodos relacionados con Admin
-		public void crearPlan() throws SQLException {
+		public void crearPlan() throws SQLException, ParseException {
 			int accion=-1;
 			while(accion==-1) {
 			accion=DataBase.AgregarRegistroLog("Planes", "Duracion","AND","Valor");
@@ -390,10 +450,13 @@ public class Simulacion {
 			mostrarPlanUser();
 		}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		Menus menu = new Menus();
 		
-		String cred[]=menu.MenuUsuarioContrasenaBD();
+		//String cred[]=menu.MenuUsuarioContrasenaBD();
+		String cred[]=new String[2];
+		cred[0]="root";
+		cred[1]="holahola123";
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
 		
