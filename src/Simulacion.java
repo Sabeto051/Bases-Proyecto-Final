@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.sun.org.apache.xerces.internal.impl.dv.xs.DateTimeDV;
 
 public class Simulacion {
 	private Entradas input;
@@ -117,7 +116,7 @@ public class Simulacion {
 				errorContra=false;
 			}
 			else {
-			System.out.println("Contraseña errada");
+			System.out.println("Contraseï¿½a errada");
 			errorContra=true;
 			}
 		}
@@ -149,7 +148,7 @@ public class Simulacion {
 		String f2 = dateFormat.format(fin);
 		double diff=DataBase.diferenciaFecha(f1, f2);
 		if(diff<0) {
-			System.out.println("Plan se venció");
+			System.out.println("Plan se venciï¿½");
 			plan_id=0;
 		}
 		System.out.println();
@@ -233,7 +232,7 @@ public class Simulacion {
 			aceptada=true;
 			int date1=input.leerInt("Dia de hoy",1,31);
 			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Año de hoy",1800,10000);
+			int date3=input.leerInt("Aï¿½o de hoy",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
@@ -250,7 +249,7 @@ public class Simulacion {
 				//System.out.println("despues de hoy");
 			}
 			else {
-				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				System.out.println("La fecha a ingresar debe ser despuï¿½s de hoy. Ingrese fehca nuevamente");
 				System.out.println("Fecha Hoy:                 "+fechaHoy);
 				System.out.println("Fecha Ingresada No Valida: "+fecha);
 				aceptada=false;
@@ -279,7 +278,7 @@ public class Simulacion {
 			aceptada=true;
 			int date1=input.leerInt("Dia de hoy",1,31);
 			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Año de hoy",1800,10000);
+			int date3=input.leerInt("Aï¿½o de hoy",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
@@ -296,7 +295,7 @@ public class Simulacion {
 				//System.out.println("despues de hoy");
 			}
 			else {
-				System.out.println("La fecha a ingresar debe ser después de hoy. Ingrese fehca nuevamente");
+				System.out.println("La fecha a ingresar debe ser despuï¿½s de hoy. Ingrese fehca nuevamente");
 				System.out.println("Fecha Hoy:                 "+fechaHoy);
 				System.out.println("Fecha Ingresada No Valida: "+fecha);
 				aceptada=false;

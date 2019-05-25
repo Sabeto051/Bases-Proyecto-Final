@@ -13,7 +13,7 @@ import javax.accessibility.AccessibleEditableText;
 
 import com.mysql.cj.conf.ConnectionUrl.Type;
 import com.mysql.cj.protocol.Resultset;
-import com.sun.accessibility.internal.resources.accessibility;
+
 
 
 public class DataBase {
@@ -1149,9 +1149,9 @@ public class DataBase {
 	}
 	
 	public static void mostrarResultSet(ResultSet rs) throws SQLException {
-	     int tamaño= rs.getMetaData().getColumnCount();	  
+	     int tamano= rs.getMetaData().getColumnCount();	  
 	    
-	     for(int i=2;i<tamaño+1;i++) {
+	     for(int i=2;i<tamano+1;i++) {
 	    	 int espacios=espacioEntreCol-rs.getMetaData().getColumnName(i).length();
      		  String spaces="";
      		  for(int k=0;k<espacios;k++) {
@@ -1161,7 +1161,7 @@ public class DataBase {
       		 }
 	     System.out.println();
 	     while(rs.next()) {
-	      	  for(int i=2;i<tamaño+1;i++) {
+	      	  for(int i=2;i<tamano+1;i++) {
 	      		  String type=rs.getMetaData().getColumnTypeName(i);
 	      		  int espacios=0;
 	      		if(type.equalsIgnoreCase("INT")){
@@ -1201,9 +1201,9 @@ public class DataBase {
 	    	  }
 	}
 	public static void mostrarResultSetConCont(ResultSet rs) throws SQLException {
-	     int tamaño= rs.getMetaData().getColumnCount();	  
+	     int tamano= rs.getMetaData().getColumnCount();	  
 	     System.out.print("   ");
-	     for(int i=2;i<tamaño+1;i++) {
+	     for(int i=2;i<tamano+1;i++) {
 	    	 int espacios=espacioEntreCol-rs.getMetaData().getColumnName(i).length();
     		  String spaces="";
     		  for(int k=0;k<espacios;k++) {
@@ -1216,7 +1216,7 @@ public class DataBase {
 	     while(rs.next()) {
 	    	 System.out.print(cont+". ");
 	    	 cont++;
-	      	  for(int i=2;i<tamaño+1;i++) {
+	      	  for(int i=2;i<tamano+1;i++) {
 	      		  String type=rs.getMetaData().getColumnTypeName(i);
 	      		  int espacios=0;
 	      		if(type.equalsIgnoreCase("INT")){
@@ -1299,7 +1299,7 @@ public class DataBase {
 	if(plas2.equals("mes") || plas2.equals("meses")) {
 	c.add(Calendar.MONTH,times);
 	}
-	if(plas2.equals("año") || plas2.equals("años")) {
+	if(plas2.equals("aï¿½o") || plas2.equals("aï¿½os")) {
 	c.add(Calendar.YEAR,times);
 	}
 	
