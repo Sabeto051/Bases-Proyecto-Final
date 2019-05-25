@@ -213,8 +213,7 @@ public class Simulacion {
 		if(cambiar==true) {
 		System.out.println("Planes");
 		System.out.println();
-		DataBase.mostrarTabla("id","Planes");
-		
+		DataBase.mostrarTablaConAtributoDeOtraTabla("id", "planes", "plan_id", "escuela_id", "PlanesEscuela","id","Escuelas","nombre");
 		// Se muestran planes disponibles
 		// Se escoge uno de los planes disponibles
 		Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","Planes"));

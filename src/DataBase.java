@@ -237,14 +237,21 @@ public class DataBase {
 	      for(int i=0;i<count+1;i++) {
 		      for(int j=0;j<typess.length;j++) {
 		    	  if(i==0) {
-		    		  System.out.print(namess[j]); 
-
-		    	      System.out.print("               ");
+		    		  int espacios=espacioEntreCol-namess[j].length();
+		     		  String spaces="";
+		     		  for(int k=0;k<espacios;k++) {
+		     			  spaces=spaces+" ";
+		     		  }
+		    		  System.out.print(namess[j]+spaces);
 		    	  }
 		    	  else {
-		    	 
-		    		  System.out.print(buscarValorDeCampoSegunID(ids,(i),namess[j])); 
-		    		  System.out.print("               ");
+		    		  String valorBuscado=buscarValorDeCampoSegunID(ids,(i),namess[j]).toString();
+		    		  int espacios=espacioEntreCol-valorBuscado.length();
+		     		  String spaces="";
+		     		  for(int k=0;k<espacios;k++) {
+		     			  spaces=spaces+" ";
+		     		  }
+		    		  System.out.print(valorBuscado+spaces); 
 		      }
 		      }
 		      System.out.println();
@@ -252,6 +259,110 @@ public class DataBase {
 		
 		
 	}
+	public static void mostrarTablaConAtributoDeOtraTabla(String ids,
+	String nombre_tabla,String idsIntermedia1,String idsIntermedia2,String tablaIntermedia,String ids2,String tabla2,String atributo) throws SQLException {
+		accederATabla(nombre_tabla);
+		DatabaseMetaData metadata = DataBase.dbConnection.getMetaData();
+		ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, "%");
+		int postypes=0;
+		int posnames=0;
+		String typess[]=new String[0];
+		String namess[]=new String[0];
+		  while (resultSet.next()) {
+		    String tableName = resultSet.getString("COLUMN_NAME");
+		    String type = resultSet.getString("TYPE_NAME");
+		    
+		    		typess=Arrays.copyOf(typess, typess.length+1);
+		    		typess[postypes]=type;
+				    postypes++;
+				    namess=Arrays.copyOf(namess, namess.length+1);
+		    		namess[posnames]=tableName;
+				    posnames++;
+		  }
+		  Statement statement = dbConnection.createStatement();
+		  ResultSet resultSet2 = statement.executeQuery("select * from "+tabla);
+	      int count = 0;
+	      while (resultSet2.next()) {
+	        count++;
+	      }  
+	      for(int i=0;i<count+1;i++) {
+		     int id=0;
+	    	  for(int j=0;j<typess.length+1;j++) {
+		    	 if(j<typess.length) {
+		    	  if(i==0) {
+		    		  int espacios=espacioEntreCol-namess[j].length();
+		     		  String spaces="";
+		     		  for(int k=0;k<espacios;k++) {
+		     			  spaces=spaces+" ";
+		     		  }
+		    		  System.out.print(namess[j]+spaces);
+		    	  }
+		    	  else {
+		    		  String valorBuscado=buscarValorDeCampoSegunID(ids,(i),namess[j]).toString();
+		    		  int espacios=espacioEntreCol-valorBuscado.length();
+		     		  String spaces="";
+		     		  for(int k=0;k<espacios;k++) {
+		     			  spaces=spaces+" ";
+		     		  }
+		     		  if(j==0) {
+		     			  id=Integer.parseInt(valorBuscado);
+		     		  }
+		     		  
+		    		  System.out.print(valorBuscado+spaces); 
+		      }
+		    	 }
+		    	 else {
+		    	if(i>0) {
+		    	  Statement statement2 = dbConnection.createStatement();
+		    	  String que="select "+atributo+" from "+tabla2+" where "+ids2+" in ( select "+
+				  idsIntermedia2+" from " +tablaIntermedia + " where " + idsIntermedia1 + " = "+id+")";
+		    	  ResultSet resultSet3 = statement2.executeQuery(que);
+		   		  String type=resultSet3.getMetaData().getColumnTypeName(1);
+		   		  Object campoMostrar=null;
+		   		  String spaces="";
+		   		  Object fields[]=new Object[getRowCount(ids2,tabla2)];
+		   		  int cont=0;
+		   		  while(resultSet3.next()) {
+		   			campoMostrar=null;
+			      		if(type.equalsIgnoreCase("INT")){
+			      			campoMostrar = resultSet3.getInt(1);
+				    	  }
+				    	  if(type.equalsIgnoreCase("VARCHAR")){
+				    		  campoMostrar = resultSet3.getString(1);
+				    	  }
+				    	  if(type.equalsIgnoreCase("FLOAT")){
+				    			campoMostrar = resultSet3.getFloat(1);
+				    	  }
+				    	  if(type.equalsIgnoreCase("TEXT") || type.equalsIgnoreCase("DATETIME") ){
+				    		  campoMostrar = resultSet3.getString(1);
+				    	  }
+				    	  if(campoMostrar==null) {
+				    		  campoMostrar="";
+				    	  }
+				    	  System.out.print("  afsf  "+campoMostrar+"  dsdf  ");
+			     		  fields[cont]=campoMostrar;
+			     		  cont++;
+		    	 }
+		   		for(int p=0;p<fields.length;p++) {
+		   		  int espacios=espacioEntreCol-fields[p].toString().length();
+	     		  spaces="";
+	     		  for(int k=0;k<espacios;k++) {
+	     			  spaces=spaces+" ";
+	     		  }
+	    		  System.out.print(fields[p].toString()+spaces); 
+		   		}
+		    	}
+		    	else {
+		    		System.out.print(tabla2);
+		    	}
+		      }
+	    	  }
+		      System.out.println();
+		      }
+		
+		
+	}
+	
 	//mostrar tabla
 	
 	public static int AgregarRegistro(String nombre_tabla, String campoVerificar) throws SQLException {
@@ -912,12 +1023,26 @@ public class DataBase {
 	      	 System.out.println(id[i]+"    "+campoMostrar);
 		}
 	}
+	public static int getRowCount(String ids,String tabla) throws SQLException {
+		 Statement st = dbConnection.createStatement();
+		 String querys = "SELECT * FROM "+tabla;
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      
+	      // iterate through the java resultset
+	     int id=0;
+	      	  while(rs.next()) {
+	      	  id++;
+	    	  }
+	      	  return id;
+		
+	}
 	
 	public static int [] mostrarTablaSegunCriterio(String tablaASegmentar,String campoParaSegmentar, String campoASeleccionar,
 		String tablaIntermedia, String campoParaFiltrar, int dato) throws SQLException {
 		accederATabla(tablaIntermedia);
 		 
-		String querys = "SELECT * FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+"=("+
+		String querys = "SELECT * FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+" in ("+
 					    "SELECT "+campoASeleccionar+" FROM " + tabla + " WHERE "+campoParaFiltrar+"="+dato+")";
 	      // create the java statement
 			int [] ids=new int[0];
