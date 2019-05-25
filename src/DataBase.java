@@ -320,10 +320,11 @@ public class DataBase {
 		   		  String type=resultSet3.getMetaData().getColumnTypeName(1);
 		   		  Object campoMostrar=null;
 		   		  String spaces="";
-		   		  Object fields[]=new Object[getRowCount(ids2,tabla2)];
-		   		  int cont=0;
+		   		  Object fieldNames[]=getRowNames(ids2,tabla2,atributo);
+		   		  Object fields[]=new Object[getRowCount(ids2, tabla2)];
+		   		  int FieldCont=0;
 		   		  while(resultSet3.next()) {
-		   			campoMostrar=null;
+		   			campoMostrar="";
 			      		if(type.equalsIgnoreCase("INT")){
 			      			campoMostrar = resultSet3.getInt(1);
 				    	  }
@@ -336,24 +337,60 @@ public class DataBase {
 				    	  if(type.equalsIgnoreCase("TEXT") || type.equalsIgnoreCase("DATETIME") ){
 				    		  campoMostrar = resultSet3.getString(1);
 				    	  }
-				    	  if(campoMostrar==null) {
-				    		  campoMostrar="";
+				    	  if(!campoMostrar.equals(fieldNames[FieldCont])) {
+				    		  boolean perf=false;
+					    		while(perf==false) {
+					    			if(campoMostrar.equals(fieldNames[FieldCont])) {
+							    		 perf=true;
+							    	  }
+					    			else {
+					    				 fields[FieldCont]="--------------";
+								    	  FieldCont++;
+					    			}
 				    	  }
-				    	  System.out.print("  afsf  "+campoMostrar+"  dsdf  ");
-			     		  fields[cont]=campoMostrar;
-			     		  cont++;
+				    	 
+				    	  }
+				    	  fields[FieldCont]=campoMostrar;
+				    	  FieldCont++;
 		    	 }
+		   		 for(int q=FieldCont;q<fields.length;q++){
+		   			fields[FieldCont]="--------------";
+			    	  FieldCont++;
+		   		 }
+		   		System.out.print("|  ");
 		   		for(int p=0;p<fields.length;p++) {
-		   		  int espacios=espacioEntreCol-fields[p].toString().length();
-	     		  spaces="";
-	     		  for(int k=0;k<espacios;k++) {
-	     			  spaces=spaces+" ";
+		   			spaces="";
+	     		  for(int k=0;k<espacioEntreCol;k++) {
+	     			  if(k<fields[p].toString().length()) {
+	     			  }
+	     			  else {
+	     				 if(k<espacioEntreCol)
+	     					 if(k==espacioEntreCol/2+8) {
+	     				     spaces=spaces+"|";	 
+	     					 }else {
+	     					 spaces=spaces+" "; }
+	     			  }
 	     		  }
 	    		  System.out.print(fields[p].toString()+spaces); 
 		   		}
 		    	}
+		    	
 		    	else {
-		    		System.out.print(tabla2);
+		    		int rowCount=getRowCount(ids2, tabla2);
+		    		if(rowCount%2==0) {
+		    			int half=rowCount/2;
+		    			for(int k=0;k<espacioEntreCol*half-7;k++) {
+			     		System.out.print(" ");
+			     		  }
+		    			System.out.print(tabla2);
+		    		}
+		    		else {
+		    			int half=rowCount/2;
+		    			for(int k=0;k<espacioEntreCol*half+4;k++) {
+				     		System.out.print(" ");
+				     		  }
+			    			System.out.print(tabla2);
+		    		}
 		    	}
 		      }
 	    	  }
@@ -1023,21 +1060,49 @@ public class DataBase {
 	      	 System.out.println(id[i]+"    "+campoMostrar);
 		}
 	}
-	public static int getRowCount(String ids,String tabla) throws SQLException {
+	public static String[] getRowNames(String ids,String tabla, String atributo) throws SQLException {
 		 Statement st = dbConnection.createStatement();
-		 String querys = "SELECT * FROM "+tabla;
+		 String querys = "SELECT "+ atributo +" FROM "+tabla;
 	      // execute the query, and get a java resultset
 	      ResultSet rs = st.executeQuery(querys);
-	      
+	      String type=rs.getMetaData().getColumnTypeName(1);
 	      // iterate through the java resultset
-	     int id=0;
-	      	  while(rs.next()) {
-	      	  id++;
+	    String names[]=new String[1];
+	    Object campoMostrar;
+	    int cont=0;  	  
+	    while(rs.next()) {
+	    	campoMostrar="";
+	    	if(type.equalsIgnoreCase("INT")){
+      			campoMostrar = rs.getInt(1);
 	    	  }
-	      	  return id;
+	    	  if(type.equalsIgnoreCase("VARCHAR")){
+	    		  campoMostrar = rs.getString(1);
+	    	  }
+	    	  if(type.equalsIgnoreCase("FLOAT")){
+	    			campoMostrar = rs.getFloat(1);
+	    	  }
+	    	  if(type.equalsIgnoreCase("TEXT") || type.equalsIgnoreCase("DATETIME") ){
+	    		  campoMostrar = rs.getString(1);
+	    	  }
+	      	 	names[cont]=campoMostrar.toString();
+	      	 	names=Arrays.copyOf(names, names.length+1);
+	      	 	cont++;
+	    	  }
+	      	  return names;
 		
 	}
-	
+	public static int getRowCount(String ids,String tabla) throws SQLException {
+		 Statement st = dbConnection.createStatement();
+		 String querys = "SELECT "+ "*" +" FROM "+tabla;
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	    int cont=0;  	  
+	    while(rs.next()) {
+	      	 	cont++;
+	    	  }
+	      	  return cont;
+		
+	}
 	public static int [] mostrarTablaSegunCriterio(String tablaASegmentar,String campoParaSegmentar, String campoASeleccionar,
 		String tablaIntermedia, String campoParaFiltrar, int dato) throws SQLException {
 		accederATabla(tablaIntermedia);
