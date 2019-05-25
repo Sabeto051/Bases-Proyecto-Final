@@ -18,6 +18,7 @@ public class Simulacion {
 	private int foros_id=0;
 	private int preguntas_id=0;
 	private int plan_id=0;
+	private int escuela_id=0;
 	
 	public Simulacion() {
 		this.input = new Entradas();
@@ -134,7 +135,7 @@ public class Simulacion {
 		System.out.println("Hola "+DataBase.buscarValorDeCampoSegunID("id",usuarios_id, "telefono"));
 		System.out.println("Su Plan Actual");
 		System.out.println();
-		plan_id=DataBase.mostrarTablaSegunCriterio("Planes", "id", "plan_id", "Usuariosplanes", "usuario_id",usuarios_id)[0];
+		plan_id=DataBase.mostrarTablaSegunCriterio("Planes", "id", "plan_id", "Usuariosplanes", "usuario_id",usuarios_id,"")[0];
 		System.out.println();
 		System.out.println();
 		DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
@@ -315,9 +316,11 @@ public class Simulacion {
 	
 	
 	public void mostrarEscuelas() throws SQLException {
+		cls();
 		// Se conecta con la tabla Escuelas
 		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
-
+		DataBase.mostrarTablaSegunCriterio("Escuelas", "id", "escuela_id", "PlanesEscuela", "plan_id",plan_id,"numerado");
+		System.out.println();
 		// se muestran las escuelas
 		// se escoge una escuela
 		this.input.leerString("Cualquier tecla para escoger escuela\n\n\n");

@@ -33,7 +33,7 @@ public class DataBase {
 	    static String dataBase="";
 	    static Statement stmt = null;
         static ResultSet resultset = null;
-	    static int espacioEntreCol=23;
+	    static int espacioEntreCol=35;
 	    
 	 public static boolean Connect(String database_name) {
 			
@@ -1104,7 +1104,7 @@ public class DataBase {
 		
 	}
 	public static int [] mostrarTablaSegunCriterio(String tablaASegmentar,String campoParaSegmentar, String campoASeleccionar,
-		String tablaIntermedia, String campoParaFiltrar, int dato) throws SQLException {
+		String tablaIntermedia, String campoParaFiltrar, int dato, String numerado) throws SQLException {
 		accederATabla(tablaIntermedia);
 		 
 		String querys = "SELECT * FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+" in ("+
@@ -1114,7 +1114,11 @@ public class DataBase {
 	      Statement st = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
 	      ResultSet rs = st.executeQuery(querys);
-	      mostrarResultSet(rs);
+	     if(numerado.equalsIgnoreCase("numerado")) {
+	    	    mostrarResultSetConCont(rs);
+	     }else {
+	    	    mostrarResultSet(rs);
+	     }
 	      Statement st2 = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
 	      ResultSet rs2 = st2.executeQuery(querys);
@@ -1196,7 +1200,61 @@ public class DataBase {
 	    	  System.out.println();
 	    	  }
 	}
-	
+	public static void mostrarResultSetConCont(ResultSet rs) throws SQLException {
+	     int tamaño= rs.getMetaData().getColumnCount();	  
+	     System.out.print("   ");
+	     for(int i=2;i<tamaño+1;i++) {
+	    	 int espacios=espacioEntreCol-rs.getMetaData().getColumnName(i).length();
+    		  String spaces="";
+    		  for(int k=0;k<espacios;k++) {
+    			  spaces=spaces+" ";
+    		  }
+     			System.out.print(rs.getMetaData().getColumnName(i)+spaces);
+     		 }
+	     System.out.println();
+	     int cont=1;
+	     while(rs.next()) {
+	    	 System.out.print(cont+". ");
+	    	 cont++;
+	      	  for(int i=2;i<tamaño+1;i++) {
+	      		  String type=rs.getMetaData().getColumnTypeName(i);
+	      		  int espacios=0;
+	      		if(type.equalsIgnoreCase("INT")){
+	      			espacios=espacioEntreCol-Integer.toString(rs.getInt(i)).length();
+	      			String spaces="";
+		      		  for(int k=0;k<espacios;k++) {
+		      			  spaces=spaces+" ";
+		      		  }
+	      			System.out.print(rs.getInt(i)+spaces);
+		    	  }
+		    	  if(type.equalsIgnoreCase("VARCHAR")){
+		    		  espacios=espacioEntreCol-rs.getString(i).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
+		    		  System.out.print(rs.getString(i)+spaces);
+		    	  }
+		    	  if(type.equalsIgnoreCase("FLOAT")){
+		    		  espacios=espacioEntreCol-Float.toString(rs.getFloat(i)).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
+		    		  System.out.print(rs.getFloat(i)+spaces);
+		    	  }
+		    	  if(type.equalsIgnoreCase("TEXT") || type.equalsIgnoreCase("DATETIME")){
+		    		  espacios=espacioEntreCol-rs.getString(i).length();
+		      			String spaces="";
+			      		  for(int k=0;k<espacios;k++) {
+			      			  spaces=spaces+" ";
+			      		  }
+		    		  System.out.print(rs.getString(i)+spaces);
+		    		  }
+	      	  }
+	    	  System.out.println();
+	    	  }
+	}
 	public static String separarString(String str) {
 		char chars[]=str.toCharArray();
 		String a="";
