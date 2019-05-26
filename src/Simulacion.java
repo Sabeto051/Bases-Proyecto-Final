@@ -39,7 +39,7 @@ public class Simulacion {
 		foros_id=0;
 		preguntas_id=0;
 		plan_id=0;
-		System.out.println("Bienvenido a Nisand");
+		System.out.println("Bienvenido a "+DataBase.dbConnection.getCatalog());
 		System.out.println("1. Register\n2. Login\n3. Login Admin");
 		int option = 2;//this.input.leerInt("opcion deseada", 1, 3);
 		cls();
@@ -709,7 +709,7 @@ public class Simulacion {
 		
 		Simulacion s = new Simulacion();
 		DataBase.Connect("Nisand");
-		//s.ingreso();
+		s.ingreso();
 	}
 
 }
