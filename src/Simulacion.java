@@ -246,7 +246,7 @@ public class Simulacion {
 				int idNombre=DataBase.AgregarRegistro("Nombres","nombre");
 				Object idN[]=new Object[1];
 				idN[0]=nombreN;
-				DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "FirstNameU", "usuario_id",);
+			//	DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "FirstNameU", "usuario_id",);
 			}else {
 				
 			}
