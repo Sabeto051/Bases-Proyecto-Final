@@ -1586,9 +1586,10 @@ public class DataBase {
 	c.add(Calendar.DATE,times);
 	}
 	if(plas2.equals("mes") || plas2.equals("meses")) {
+		
 	c.add(Calendar.MONTH,times);
 	}
-	if(plas2.equals("aï¿½o") || plas2.equals("aï¿½os")) {
+	if(plas2.equals("año") || plas2.equals("años")) {
 	c.add(Calendar.YEAR,times);
 	}
 	

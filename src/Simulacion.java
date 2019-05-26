@@ -40,7 +40,7 @@ public class Simulacion {
 		foros_id=0;
 		preguntas_id=0;
 		plan_id=0;
-		System.out.println("Bienvenido a Nisand");
+		System.out.println("Bienvenido a "+DataBase.dbConnection.getCatalog());
 		System.out.println("1. Register\n2. Login\n3. Login Admin");
 		int option = 2;//this.input.leerInt("opcion deseada", 1, 3);
 		cls();
@@ -388,9 +388,9 @@ public class Simulacion {
 			boolean aceptada=false;
 			while(aceptada==false) {
 			aceptada=true;
-			int date1=input.leerInt("Dia de hoy",1,31);
-			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Ano de hoy",1800,10000);
+			int date1=input.leerInt("Dia ",1,31);
+			int date2=input.leerInt("Mes ",1,12);
+			int date3=input.leerInt("Ano ",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
@@ -434,9 +434,9 @@ public class Simulacion {
 			boolean aceptada=false;
 			while(aceptada==false) {
 			aceptada=true;
-			int date1=input.leerInt("Dia de hoy",1,31);
-			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Ano de hoy",1800,10000);
+			int date1=input.leerInt("Dia ",1,31);
+			int date2=input.leerInt("Mes ",1,12);
+			int date3=input.leerInt("A�o ",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
@@ -727,25 +727,16 @@ public class Simulacion {
 	
 	
 	
-	//Metodos relacionados con Admin
-		public void crearPlan() throws SQLException, ParseException {
-			int accion=-1;
-			while(accion==-1) {
-			accion=DataBase.AgregarRegistroLog("planes", "Duracion","AND","Valor");
-			if(accion==-1) {
-				System.out.println("Plan ya existe. Intente nuevamente.");
-			}
-			}
-			mostrarPlanUser();
-		}
-	
+
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		Menus menu = new Menus();
 		
 		//String cred[]=menu.MenuUsuarioContrasenaBD();
 		String cred[]=new String[2];
-		cred[0]="santiago";
-		cred[1]="asdf";
+		/*cred[0]="santiago";
+		cred[1]="asdf";*/
+		cred[0]="root";
+		cred[1]="holahola123";
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
 		
