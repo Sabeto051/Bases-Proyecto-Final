@@ -709,7 +709,7 @@ public class Simulacion {
 		
 		Simulacion s = new Simulacion();
 		DataBase.Connect("Nisand");
-		s.ingreso();
+		//s.ingreso();
 	}
 
 }
