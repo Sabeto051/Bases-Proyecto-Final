@@ -1100,7 +1100,7 @@ public class DataBase {
 
 	public static int buscarExistente(String tabla1,String ids,String campo,  String dato) throws SQLException {
 		accederATabla(tabla1); 
-		String querys = "SELECT * FROM "+tabla+" WHERE "+campo+"='"+dato+"';";
+		String querys = "SELECT * FROM "+tabla1+" WHERE "+campo+"='"+dato+"';";
 
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
