@@ -135,7 +135,7 @@ public class Simulacion {
 	}
 	public void loginUser() throws SQLException, ParseException {
 		// Conecta con la tabla de usuarios
-		DataBase.accederATabla("Usuarios");
+		DataBase.accederATabla("usuarios");
 		// pide nÃºmero y contraseÃ±a
 		boolean error=true;
 		while(error==true) {
@@ -152,11 +152,11 @@ public class Simulacion {
 			while(errorContra==true) {
 			errorContra=false;
 			String contra="dank";//this.input.leerString("Contrasena");
-			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("Usuarios","id",usuarios_id, "pwd").toString())) {
+			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("usuarios","id",usuarios_id, "pwd").toString())) {
 				errorContra=false;
 			}
 			else {
-			System.out.println("Contraseï¿½a errada");
+			System.out.println("Contrasena errada");
 			errorContra=true;
 			}
 		}
@@ -171,21 +171,21 @@ public class Simulacion {
 		
 		cls();
 		DataBase.accederATabla("Usuarios");
-		int Nid=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("FirstNameU","usuario_id", usuarios_id, "nombre_id").toString());
-		int Nap=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("LastNameU","usuario_id", usuarios_id, "apellido_id").toString());
+		int Nid=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("firstnameu","usuario_id", usuarios_id, "nombre_id").toString());
+		int Nap=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("lastnameu","usuario_id", usuarios_id, "apellido_id").toString());
 		String name=DataBase.buscarValorDeCampoSegunID("nombres", "id", Nid, "nombre").toString();
 		String ape=DataBase.buscarValorDeCampoSegunID("apellidos", "id", Nap, "apellido").toString();
 		System.out.println(name+" "+ape);
 		System.out.println("Su Plan Actual");
 		System.out.println();
-		plan_id=DataBase.mostrarTablaSegunCriterio("Planes", "id", "plan_id", "Usuariosplanes", "usuario_id",usuarios_id,"")[0];
+		plan_id=DataBase.mostrarTablaSegunCriterio("planes", "id", "plan_id", "usuariosplanes", "usuario_id",usuarios_id,"")[0];
 		if(plan_id>0) {
 		System.out.println();
 		System.out.println();
 		DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
 		System.out.println();
 		System.out.println();
-		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("Usuariosplanes","usuario_id", usuarios_id, "fecha_fin");
+		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("usuariosplanes","usuario_id", usuarios_id, "fecha_fin");
 		String f1=fecha_fin.toString();
 		Calendar c = Calendar.getInstance();
 		Date fin=c.getTime();
@@ -261,11 +261,11 @@ public class Simulacion {
 		int apellidoi=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("LastNameU", "usuario_id",usuarios_id,"apellido_id").toString());
 		String apellidoViejo=DataBase.buscarValorDeCampoSegunID("apellidos", "id", apellidoi, "apellido").toString();
 		System.out.println("Telefono       "+ telViejo);
-		System.out.println("Contraseña     "+ contraViejo);
+		System.out.println("Contraseï¿½a     "+ contraViejo);
 		System.out.println("Nombre         "+ nombreViejo);
 		System.out.println("Apellido       "+ apellidoViejo);
 		System.out.println();
-		System.out.println("1. Modificar Telefono\n2. Cambiar contraseña\n3. Cambiar Nombre\n"
+		System.out.println("1. Modificar Telefono\n2. Cambiar contraseï¿½a\n3. Cambiar Nombre\n"
 				+ "4. Cambiar Apellido\n" +"5. Volver a Menu Principal");
 		int option = input.leerInt("la accion que desea realizar ", 1, 5);
 		switch (option) {
@@ -292,7 +292,7 @@ public class Simulacion {
 			break;
 		case 2:
 			System.out.println(   "La Contrasena vieja es        "+contraViejo);
-			String contra=input.leerString("la contraseña nueva  ");
+			String contra=input.leerString("la contraseï¿½a nueva  ");
 			DataBase.ModificarRegistroUnico("Usuarios", "id", "pwd", 
 			contraViejo, "pwd", contra);
 			modificarInfoUser();
@@ -702,8 +702,8 @@ public class Simulacion {
 		
 		//String cred[]=menu.MenuUsuarioContrasenaBD();
 		String cred[]=new String[2];
-		cred[0]="root";
-		cred[1]="holahola123";
+		cred[0]="santiago";
+		cred[1]="asdf";
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
 		
