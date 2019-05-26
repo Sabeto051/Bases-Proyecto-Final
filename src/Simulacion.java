@@ -387,9 +387,9 @@ public class Simulacion {
 			boolean aceptada=false;
 			while(aceptada==false) {
 			aceptada=true;
-			int date1=input.leerInt("Dia de hoy",1,31);
-			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Ano de hoy",1800,10000);
+			int date1=input.leerInt("Dia ",1,31);
+			int date2=input.leerInt("Mes ",1,12);
+			int date3=input.leerInt("Ano ",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
@@ -433,9 +433,9 @@ public class Simulacion {
 			boolean aceptada=false;
 			while(aceptada==false) {
 			aceptada=true;
-			int date1=input.leerInt("Dia de hoy",1,31);
-			int date2=input.leerInt("Mes de hoy",1,12);
-			int date3=input.leerInt("Ano de hoy",1800,10000);
+			int date1=input.leerInt("Dia ",1,31);
+			int date2=input.leerInt("Mes ",1,12);
+			int date3=input.leerInt("Año ",1800,10000);
 			String dateS1=Integer.toString(date1);
 			String dateS2=Integer.toString(date2);
 			String dateS3=Integer.toString(date3);
