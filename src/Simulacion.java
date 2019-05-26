@@ -88,6 +88,18 @@ public class Simulacion {
 		}
 		else {
 			usuarios_id=id;
+			//Agregar Nombre
+			System.out.println();
+			int idNombre=DataBase.AgregarRegistro("Nombres","nombre");
+			Object idN[]=new Object[1];
+			idN[0]=idNombre;
+			DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "FirstNameU", "usuario_id",idN);
+			//Agregar Apellido
+			int idApe=DataBase.AgregarRegistro("Apellidos","apellido");
+			Object idN2[]=new Object[1];
+			idN2[0]=idApe;
+			DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "LastNameU", "usuario_id",idN2);
+			System.out.println();
 			existe=false;
 		}
 		}
@@ -101,7 +113,7 @@ public class Simulacion {
 		boolean error=true;
 		while(error==true) {
 			error=false;
-		String tel="2";//this.input.leerString("su telefono");
+		String tel="3137938896";//this.input.leerString("su telefono");
 		int id=DataBase.buscarExistente("usuarios","id","telefono", tel);
 		if(id==-1) {
 			System.out.println("Telefono no existe");
@@ -112,8 +124,8 @@ public class Simulacion {
 			boolean errorContra=true;
 			while(errorContra==true) {
 			errorContra=false;
-			String contra="1";//this.input.leerString("Contrasena");
-			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("id",usuarios_id, "pwd").toString())) {
+			String contra="2";//this.input.leerString("Contrasena");
+			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("Usuarios","id",usuarios_id, "pwd").toString())) {
 				errorContra=false;
 			}
 			else {
@@ -132,30 +144,37 @@ public class Simulacion {
 		
 		cls();
 		DataBase.accederATabla("Usuarios");
-		System.out.println("Hola "+DataBase.buscarValorDeCampoSegunID("id",usuarios_id, "telefono"));
+		System.out.println("Hola "+DataBase.buscarValorDeCampoSegunID("Usuarios","id",usuarios_id, "telefono"));
 		System.out.println("Su Plan Actual");
 		System.out.println();
 		plan_id=DataBase.mostrarTablaSegunCriterio("Planes", "id", "plan_id", "Usuariosplanes", "usuario_id",usuarios_id,"")[0];
+		if(plan_id>0) {
 		System.out.println();
 		System.out.println();
 		DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
 		System.out.println();
 		System.out.println();
-		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("usuario_id", usuarios_id, "fecha_fin");
+		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("Usuariosplanes","usuario_id", usuarios_id, "fecha_fin");
 		String f1=fecha_fin.toString();
 		Calendar c = Calendar.getInstance();
 		Date fin=c.getTime();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		String f2 = dateFormat.format(fin);
+		
 		double diff=DataBase.diferenciaFecha(f1, f2);
 		if(diff<0) {
 			System.out.println("Plan se venció");
 			plan_id=0;
 		}
+		
+		}
+		else {
+			System.out.println("   NA                                NA");
+		}
 		System.out.println();
 		System.out.println("1. Comprar nuevo Plan\n2. Acceder a Escuelas\n3. Ver Cursos completados\n"
-				+ "4. Ver preguntas hechas");
-		int option = this.input.leerInt("opcion deseada", 1, 4);
+				+ "4. Ver preguntas hechas"+ "\n5. Modificar Datos de la Cuenta");
+		int option = this.input.leerInt("opcion deseada", 1, 5);
 		switch (option) {
 		case 1:
 			crearPlanParaUsuario();
@@ -168,6 +187,9 @@ public class Simulacion {
 			break;
 		case 4:
 			mostrarPreguntasUser();
+			break;
+		case 5:
+			modificarInfoUser();
 			break;
 		}
 
@@ -184,7 +206,65 @@ public class Simulacion {
 	public void mostrarPreguntasUserRespuesta() {
 		// Creo que este metodo se puede combinar con otro que estÃ¡ mÃ¡s abajo 
 	}
-
+	public void modificarInfoUser() throws SQLException, ParseException {
+		cls();
+		System.out.println("Menu Modificacion de Cuenta");
+		System.out.println();
+		String telViejo=DataBase.buscarValorDeCampoSegunID("Usuarios", "id",usuarios_id, "telefono").toString();
+		String contraViejo=DataBase.buscarValorDeCampoSegunID("Usuarios", "id",usuarios_id, "pwd").toString();
+		int Nombrei=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("FirstNameU", "usuario_id",usuarios_id,"nombre_id").toString());
+		String nombreViejo=DataBase.buscarValorDeCampoSegunID("Nombres", "id", Nombrei, "nombre").toString();
+		int apellidoi=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("LastNameU", "usuario_id",usuarios_id,"apellido_id").toString());
+		String apellidoViejo=DataBase.buscarValorDeCampoSegunID("apellidos", "id", apellidoi, "apellido").toString();
+		System.out.println("Telefono       "+ telViejo);
+		System.out.println("Contraseña     "+ contraViejo);
+		System.out.println("Nombre         "+ nombreViejo);
+		System.out.println("Apellido       "+ apellidoViejo);
+		System.out.println();
+		System.out.println("1. Modificar Telefono\n2. Cambiar contraseña\n3. Cambiar Nombre\n"
+				+ "4. Cambiar Apellido\n" +"5. Volver a Menu Principal");
+		int option = input.leerInt("la accion que desea realizar ", 1, 5);
+		switch (option) {
+		case 1:
+			System.out.println("El telefono viejo es        "+telViejo);
+			String tel=input.leerString("el telefono nuevo  ");
+			DataBase.ModificarRegistroUnico("Usuarios", "id", "telefono", 
+			telViejo, "telefono", tel);
+			modificarInfoUser();
+			break;
+		case 2:
+			System.out.println(   "La Contrasena vieja es        "+contraViejo);
+			String contra=input.leerString("la contraseña nueva  ");
+			DataBase.ModificarRegistroUnico("Usuarios", "id", "pwd", 
+			contraViejo, "pwd", contra);
+			modificarInfoUser();
+			break;
+		case 3:
+			System.out.println(   "El nombre nuevo es       "+nombreViejo);
+			String Nombre=input.leerString("el nombre nuevo");
+			int nombreN=DataBase.buscarExistente("Nombres", "id", "nombre",Nombre);
+			if(nombreN==-1) {
+				int idNombre=DataBase.AgregarRegistro("Nombres","nombre");
+				Object idN[]=new Object[1];
+				idN[0]=nombreN;
+				DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "FirstNameU", "usuario_id",);
+			}else {
+				
+			}
+			/*DataBase.ModificarRegistroUnico("FirstNameU", "id", "usuarios_id", 
+			contraViejo, "", contra);*/
+			modificarInfoUser();
+			mostrarCursosCompletados();
+			break;
+		case 4:
+			mostrarPreguntasUser();
+			break;
+		case 5:
+			mostrarPlanUser();
+			break;
+		}
+		mostrarPlanUser();
+	}
 	public void mostrarCursosCompletados() throws SQLException, ParseException {
 		// Se conecta con tabla Cursos , Usuarios y  Estudaintes-Cursos
 		// Se muestran los cursos completados
@@ -259,7 +339,7 @@ public class Simulacion {
 		}
 		Object datos[]=new Object[2];
 		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha(fecha,"id", plan_id, "duracion");
+		String fecha2= DataBase.sumarAFecha("Planes",fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
 		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
 		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
@@ -305,7 +385,7 @@ public class Simulacion {
 		}
 		Object datos[]=new Object[3];
 		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha(fecha,"id", plan_id, "duracion");
+		String fecha2= DataBase.sumarAFecha("Planes",fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
 		datos[2]=plan_id;
 		DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "Usuariosplanes", "usuario_id", datos);
@@ -313,24 +393,44 @@ public class Simulacion {
 		}
 		mostrarPlanUser();
 		}
-	
-	
 	public void mostrarEscuelas() throws SQLException {
 		cls();
 		// Se conecta con la tabla Escuelas
 		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas estÃ¡n en todos los planes)
-		DataBase.mostrarTablaSegunCriterio("Escuelas", "id", "escuela_id", "PlanesEscuela", "plan_id",plan_id,"numerado");
+		System.out.println("Plan "+DataBase.buscarValorDeCampoSegunID("Planes","id", plan_id, "id"));
+		System.out.println("Escuelas ");
+		System.out.println();
+		int opciones[]=DataBase.mostrarTablaSegunCriterio("Escuelas", "id", "escuela_id", "PlanesEscuela", "plan_id",plan_id,"numerado");
 		System.out.println();
 		// se muestran las escuelas
 		// se escoge una escuela
-		this.input.leerString("Cualquier tecla para escoger escuela\n\n\n");
+		if(opciones.length==1) {
+			escuela_id=opciones[0];
+		}else 
+		{
+		escuela_id=input.leerInt("la escuela a acceder ",1,opciones.length);
+		}
 		mostrarCarreras(); // de la escuela
 	}
 	public void mostrarCarreras() throws SQLException {
 		// se muestran las carreras de la escuela
-		System.out.println("Escuela INSERTE NOMBRE AQUI");
-		// se escoge una carrera
-		this.input.leerString("Cualquier tecla para escoger Carrera\n\n\n");
+		cls();
+		// Se conecta con la tabla Escuelas
+		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas estÃ¡n en todos los planes)
+		System.out.println("Plan "+DataBase.buscarValorDeCampoSegunID("Planes","id", plan_id, "id"));
+		System.out.println("Escuela "+DataBase.buscarValorDeCampoSegunID("Escuelas","id", escuela_id, "nombre"));
+		System.out.println("Carreras ");
+		System.out.println();
+		int opciones[]=DataBase.mostrarTablaSegunCriterio("Carreras", "id", "carrera_id", "CarrerasEscuela", "plan_id",plan_id,"numerado");
+		System.out.println();
+		// se muestran las escuelas
+		// se escoge una escuela
+		if(opciones.length==1) {
+			escuela_id=opciones[0];
+		}else 
+		{
+		escuela_id=input.leerInt("la escuela a acceder ",1,opciones.length);
+		}
 		mostrarCursos(); // de la carrera
 	}
 	public void mostrarCursos() throws SQLException {

@@ -238,7 +238,7 @@ public void ModificarTabla() throws ClassNotFoundException, SQLException {
 				int id=inputs.leerInt("el ID del registro", 1, 1000000000);
 				String campo=inputs.leerString("campo");
 				String input=inputs.leerString("input");
-				DataBase.ModificarRegistro("id",id,campo, input);
+				DataBase.ModificarRegistro(DataBase.tabla,"id",id,campo, input);
 				
 			}
 		}

@@ -27,14 +27,14 @@ public class Entradas {
 				if(a<min || a>max) {
 					error=true;
 					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo entero");
+					System.out.println();
 				}
 			}
 		}
 		catch(InputMismatchException | NumberFormatException e) {
 			System.out.println("Hubo un error. Valor Ingresado debe ser entero");
-			System.out.println(a);
-			System.out.println(max);
 			error=true;
+			System.out.println();
 		}
 		}
 		return a;
@@ -62,12 +62,14 @@ public class Entradas {
 				if(a<min || a>max) {
 					error=true;
 					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+					System.out.println();
 				}
 			}
 		}
 		catch(InputMismatchException | NumberFormatException e) {
 			System.out.println("Hubo un error. Valor Ingresado debe ser float");
 			error=true;
+			System.out.println();
 		}
 		}
 		return a;
@@ -96,12 +98,14 @@ public class Entradas {
 				if(a<min || a>max) {
 					error=true;
 					System.out.println("Hubo un error. Opcion debe estar entre "+min+" y "+max+" y debe ser de tipo float");
+					System.out.println();
 				}
 			}
 		}
 		catch(InputMismatchException | NumberFormatException e) {
 			System.out.println("Hubo un error. Valor Ingresado debe ser float");
 			error=true;
+			System.out.println();
 		}
 		}
 		return a;
