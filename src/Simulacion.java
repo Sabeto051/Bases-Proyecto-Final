@@ -700,10 +700,10 @@ public class Simulacion {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		Menus menu = new Menus();
 		
-		//String cred[]=menu.MenuUsuarioContrasenaBD();
-		String cred[]=new String[2];
+		String cred[]=menu.MenuUsuarioContrasenaBD();
+		/*String cred[]=new String[2];
 		cred[0]="santiago";
-		cred[1]="asdf";
+		cred[1]="asdf";*/
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
 		
