@@ -697,18 +697,6 @@ public class Simulacion {
 	
 	
 	
-	//Metodos relacionados con Admin
-		public void crearPlan() throws SQLException, ParseException {
-			int accion=-1;
-			while(accion==-1) {
-			accion=DataBase.AgregarRegistroLog("Planes", "Duracion","AND","Valor");
-			if(accion==-1) {
-				System.out.println("Plan ya existe. Intente nuevamente.");
-			}
-			}
-			mostrarPlanUser();
-		}
-	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		Menus menu = new Menus();
 		
