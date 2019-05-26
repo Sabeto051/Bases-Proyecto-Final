@@ -248,7 +248,7 @@ public class DataBase {
 		    		  System.out.print(namess[j]+spaces);
 		    	  }
 		    	  else {
-		    		  String valorBuscado=buscarValorDeCampoSegunID(ids,(i),namess[j]).toString();
+		    		  String valorBuscado=buscarValorDeCampoSegunID(nombre_tabla,ids,(i),namess[j]).toString();
 		    		  int espacios=espacioEntreCol-valorBuscado.length();
 		     		  String spaces="";
 		     		  for(int k=0;k<espacios;k++) {
@@ -301,7 +301,7 @@ public class DataBase {
 		    		  System.out.print(namess[j]+spaces);
 		    	  }
 		    	  else {
-		    		  String valorBuscado=buscarValorDeCampoSegunID(ids,(i),namess[j]).toString();
+		    		  String valorBuscado=buscarValorDeCampoSegunID(nombre_tabla,ids,(i),namess[j]).toString();
 		    		  int espacios=espacioEntreCol-valorBuscado.length();
 		     		  String spaces="";
 		     		  for(int k=0;k<espacios;k++) {
@@ -427,8 +427,6 @@ public class DataBase {
 		String typess[]=new String[0];
 		String namess[]=new String[0];
 	
-		System.out.println("Agregar registro a tabla "+tabla);
-		 System.out.println();
 		  while (resultSet.next()) {
 		 
 		    String tableName = resultSet.getString("COLUMN_NAME");
@@ -469,7 +467,6 @@ public class DataBase {
 		     Object[] datos=new Object[typess.length];
 		     Entradas inputs=new Entradas();
 		      for(int i=0;i<typess.length;i++) {
-		    	  System.out.println(typess[i]);
 		    	  if(typess[i].equals("INT")){
 		    		 datos[i]=inputs.leerInt(namess[i],0,1000000000);
 		    	  }
@@ -590,9 +587,6 @@ public class DataBase {
 		int posnames=0;
 		String typess[]=new String[0];
 		String namess[]=new String[0];
-	
-		System.out.println("Agregar registro a tabla "+tabla);
-		 System.out.println();
 		  while (resultSet.next()) {
 		 
 		    String tableName = resultSet.getString("COLUMN_NAME");
@@ -734,8 +728,6 @@ public class DataBase {
 		String typess[]=new String[0];
 		String namess[]=new String[0];
 	
-		System.out.println("Agregar registro a tabla "+tabla);
-		 System.out.println();
 		  while (resultSet.next()) {
 		 
 		    String tableName = resultSet.getString("COLUMN_NAME");
@@ -776,7 +768,6 @@ public class DataBase {
 		     Object[] datos=new Object[typess.length];
 		     Entradas inputs=new Entradas();
 		      for(int i=0;i<typess.length;i++) {
-		    	  System.out.println(typess[i]);
 		    	  if(typess[i].equals("INT")){
 		    		 datos[i]=inputs.leerInt(namess[i],0,1000000000);
 		    	  }
@@ -918,12 +909,12 @@ public class DataBase {
 			System.out.println("No se encontro registro a eliminar");
 		}
 	      }
-	public static void ModificarRegistro(String ids, int id,String campo, Object dato) throws SQLException {
+	public static void ModificarRegistro(String nombre_tabla,String ids, int id,String campo, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
 		String datoAnt="";
 		if(id>0) {
-		datoAnt=buscarValorDeCampoSegunID(ids,id, campo).toString();
+		datoAnt=buscarValorDeCampoSegunID(nombre_tabla,ids,id, campo).toString();
 	      String query = "update "+tabla+" set "+campo+" = ? where "+ids+" = "+id;
 	      
 	      PreparedStatement preparedStmt = DataBase.dbConnection.prepareStatement(query);
@@ -942,7 +933,7 @@ public class DataBase {
 			System.out.println("No se encontro registro a eliminar");
 		}
 		int idArray[] =buscarExistenteArray("id",campo, datoAnt);
-		mostrarIDSconCampo(ids,idArray, "contenido");
+		mostrarIDSconCampo(nombre_tabla,ids,idArray, "contenido");
 	      }
 	public static void ModificarRegistroCascada(String ids,String campo, String datoAnt, Object dato) throws SQLException {
 		// our SQL SELECT query. 
@@ -987,14 +978,15 @@ public class DataBase {
 	    	  }
 	      	  return id;
 	}
-	public static Object buscarValorDeCampoSegunID(String ids, int id,String campo) throws SQLException {
+	public static Object buscarValorDeCampoSegunID(String tabla1,String ids, int id,String campo) throws SQLException {
+		DataBase.accederATabla(tabla1);
 		DatabaseMetaData metadata = dbConnection.getMetaData();
 	      ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, campo);
 	      String tipo_campo ="";
 	      while (resultSet.next()) {
 	    	 tipo_campo = resultSet.getString("TYPE_NAME");
 	      }
-		String querys = "SELECT * FROM "+tabla+" where "+ids+" = "+id;
+		String querys = "SELECT * FROM "+tabla1+" where "+ids+" = "+id;
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
@@ -1056,10 +1048,10 @@ public class DataBase {
 	    	  }
 	      	  return id;
 	}
-	public static void mostrarIDSconCampo(String ids,int id[],String campo) throws SQLException {
+	public static void mostrarIDSconCampo(String nombre_tabla,String ids,int id[],String campo) throws SQLException {
 		System.out.println(ids+"    "+campo);
 		for(int i=0;i<id.length;i++) {
-			String campoMostrar=buscarValorDeCampoSegunID(ids,id[i], campo).toString();
+			String campoMostrar=buscarValorDeCampoSegunID(nombre_tabla,ids,id[i], campo).toString();
 	      	 System.out.println(id[i]+"    "+campoMostrar);
 		}
 	}
@@ -1129,12 +1121,14 @@ public class DataBase {
 	      while(rs2.next()) {
 	    	  ids=Arrays.copyOf(ids, ids.length+1);
 	    	  ids[cont]=rs2.getInt(1);
+	    	  cont++;
 	      }
 	      if(ids.length==0) {
 	    	  ids=Arrays.copyOf(ids, ids.length+1);
 	    	  ids[cont]=0;
+	    	  cont++;
 	      }
-	     
+	      
 	      return ids;
 	      	  
 	}
@@ -1285,13 +1279,13 @@ public class DataBase {
 		return Integer.parseInt(a);
 		
 	}
-	public static String sumarAFecha(String dateSS,String ids, int campoid, String tiempo) throws SQLException, ParseException {
+	public static String sumarAFecha(String nombre_tabla,String dateSS,String ids, int campoid, String tiempo) throws SQLException, ParseException {
 	Calendar c = Calendar.getInstance();
 	DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 	Date date22=dateFormat1.parse(dateSS);
 	c.setTime(date22); // Now use today date.
 	accederATabla("planes");
-	String plans=buscarValorDeCampoSegunID(ids,campoid,tiempo).toString();
+	String plans=buscarValorDeCampoSegunID(nombre_tabla,ids,campoid,tiempo).toString();
 
 	String plas2=DataBase.separarString(plans);
 	int times=DataBase.separarStringInt(plans);
