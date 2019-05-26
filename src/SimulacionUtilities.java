@@ -1,5 +1,7 @@
 import java.sql.SQLException;
 
+
+
 public class SimulacionUtilities {
 	static Entradas inputSim = new Entradas();
 	
@@ -30,27 +32,83 @@ public class SimulacionUtilities {
 		}
 	}
 	
-	public static void mostrarRespuestas(int pregunta_id) {
+	public static int  mostrarRespuestas(int pregunta_id, int espacioss) {
+		int respuesta = -1;
+		DataBase.accederATabla("respuestas");
 		try {
-			DataBase.buscarExistente("Preguntas","pregunta_id","pregunta_id", Integer.toString(pregunta_id));
-			DataBase.buscarExistente("Respuestas","id","pregunta_id", Integer.toString(pregunta_id));
+			int[] ids = DataBase.buscarExistenteArray("id", "pregunta_id", Integer.toString(pregunta_id));
+
+			String[] contenido = new String[ids.length];
+			String[] puntuacion = new String[ids.length];
+			for (int i=0; i<ids.length;i++) {
+				contenido[i] = DataBase.buscarValorDeCampoSegunID("respuestas", "id", ids[i], "contenido").toString();
+				puntuacion[i] = DataBase.buscarValorDeCampoSegunID("respuestas", "id", ids[i], "puntuacion").toString();
+
+				String id = Integer.toString(ids[i]);
+				int espacios = espacioss;
+				for (int j = 0; j < espacios; j++) {
+					if (j<espacios/3) {
+						if (j==0) {
+							System.out.print(id);
+						}
+						if (j>id.length()-1) {
+							System.out.print(" ");
+						}
+					}
+					if (j>=espacios/3 && j<espacios*2/3) {
+						if (j==espacios/3) {
+							System.out.print(contenido[i]);
+						}
+						if (j>contenido[i].length()-1 + espacios/3) {
+							System.out.print(" ");
+						}
+					}
+
+					if (j==espacios*2/3) {
+						System.out.print(puntuacion[i]);
+					}
+
+				}
+				System.out.println("");
+			}
+
+			respuesta = inputSim.leerIntConArray("Respuesta", ids);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return respuesta;
 	}
 	
 	public static int mostrarPreguntas(int foro_id) {
-		Object[] retorno = new Object[2];
+		int respuesta = -1;
+		DataBase.accederATabla("preguntas");
 		try {
-			DataBase.buscarExistente("Preguntas","id","foro_id", Integer.toString(foro_id));
-			
-			retorno[0] = inputSim.leerInt("Pregunta a escoger", 0, 100000);
-			
+			int[] ids = DataBase.buscarExistenteArray("id", "foro_id", Integer.toString(foro_id));
+//			DataBase.mostrarIDSconCampo("preguntas", "id", ids, "contenido");
+			String[] contenido = new String[ids.length];
+			for (int i=0; i<ids.length;i++) {
+				contenido[i] = DataBase.buscarValorDeCampoSegunID("respuestas", "id", ids[i], "contenido").toString();
+
+				String id = Integer.toString(ids[i]);
+				
+				for (int j =0;j<12;j++) {
+					if (j==0) {
+						System.out.print(id);
+					}
+					if (j>=0+id.length()) {
+						System.out.print(" ");
+					}
+				}
+				System.out.println(contenido[i]+"\n");
+			}
+
+			respuesta = inputSim.leerIntConArray("Pregunta", ids);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 1;
+		return respuesta;
 	}
 	
 	

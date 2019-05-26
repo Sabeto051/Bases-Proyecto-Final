@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 
+
 public class Simulacion {
 	private Entradas input;
 	private int usuarios_id=0;
@@ -166,8 +167,8 @@ public class Simulacion {
 		mostrarPlanUser();
 	}
 	public void mostrarPlanUser() throws SQLException, ParseException {
-		// Se conecta la tabla Planes
-		// Se conecta la tabla Usuarios-Planes
+		// Se conecta la tabla planes
+		// Se conecta la tabla Usuarios-planes
 		
 		cls();
 		DataBase.accederATabla("Usuarios");
@@ -368,13 +369,13 @@ public class Simulacion {
 			}
 		}
 		if(cambiar==true) {
-		System.out.println("Planes");
+		System.out.println("planes");
 		System.out.println();
-		DataBase.mostrarTablaConAtributoDeOtraTabla("id", "planes", "plan_id", "escuela_id", "PlanesEscuela","id","Escuelas","nombre");
+		DataBase.mostrarTablaConAtributoDeOtraTabla("id", "planes", "plan_id", "escuela_id", "planesescuela","id","escuelas","nombre");
 		// Se muestran planes disponibles
 		// Se escoge uno de los planes disponibles
-		Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","Planes"));
-		DataBase.accederATabla("Usuariosplanes");
+		Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","planes"));
+		DataBase.accederATabla("usuariosplanes");
 		if(plan_id>0) {
 		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id","usuario_id",Integer.toString(usuarios_id),"plan_id",option);
 		plan_id=Integer.parseInt(option.toString());
@@ -415,7 +416,7 @@ public class Simulacion {
 		}
 		Object datos[]=new Object[2];
 		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha("Planes",fecha,"id", plan_id, "duracion");
+		String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
 		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
 		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
@@ -461,14 +462,14 @@ public class Simulacion {
 		}
 		Object datos[]=new Object[3];
 		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha("Planes",fecha,"id", plan_id, "duracion");
+		String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
 		datos[1]=fecha2;
 		datos[2]=plan_id;
-		if(DataBase.buscarExistente("Usuariosplanes", "usuario_id", "usuario_id",Integer.toString(usuarios_id))>0) {
+		if(DataBase.buscarExistente("usuariosplanes", "usuario_id", "usuario_id",Integer.toString(usuarios_id))>0) {
 			DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
 			DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
 		}else {
-			DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "Usuariosplanes", "usuario_id", datos);
+			DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "usuariosplanes", "usuario_id", datos);
 		}
 		}
 		}
@@ -478,7 +479,7 @@ public class Simulacion {
 		cls();
 		escuela_id=0;
 		// Se conecta con la tabla Escuelas
-		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
+		// Se conecta la tabla planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
 		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
 		System.out.println("Escuelas ");
 		System.out.println();
@@ -503,7 +504,7 @@ public class Simulacion {
 		carrera_id=0;
 		cls();
 		// Se conecta con la tabla Escuelas
-		// Se conecta la tabla Planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
+		// Se conecta la tabla planes-Escuela (Dijimos que no todas las escuelas están en todos los planes)
 		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
 		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
 		System.out.println("Carreras ");
@@ -552,8 +553,8 @@ public class Simulacion {
 			else {
 				curso_id=in;
 				prof_id=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "profesor_id").toString());
-				int PName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("FirstNameP", "profesor_id", prof_id, "nombre_id").toString());
-				int PLName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("LastNameP", "profesor_id", prof_id, "apellido_id").toString());
+				int PName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("firstnamep", "profesor_id", prof_id, "nombre_id").toString());
+				int PLName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("lastnamep", "profesor_id", prof_id, "apellido_id").toString());
 				prof_name=DataBase.buscarValorDeCampoSegunID("nombres","id", PName, "nombre").toString();
 				prof_lname=DataBase.buscarValorDeCampoSegunID("apellidos","id", PLName, "apellido").toString();
 				mostrarCursoMenu();
@@ -646,41 +647,70 @@ public class Simulacion {
 		mostrarVideos();
 	}
 	public void mostrarPreguntas() throws SQLException {
-		// Se conecta con tablas preguntas 
-		// Se muestran las preguntas del j
+		System.out.println("\n\n\n");
+		System.out.println("Preguntas:");
+		String encabezado = "id          contenido";
+		String separador = "-----------------------------------------------------------------------------";
+		System.out.println(encabezado + "\n" + separador);
 		this.preguntas_id = SimulacionUtilities.mostrarPreguntas(foros_id);
 		System.out.println("\n\n\n");
 		mostrarPreguntaMenu();
 	}
 	public void mostrarPreguntaMenu() throws SQLException {
-		System.out.println("1. Ver Respuestas a la pregunta\n2. Retroceder");
-		int option = this.input.leerInt("opcion deseada", 1, 2);
+		System.out.println("1. Ver Respuestas a la pregunta\n2. Responder Preguunta\n3. Retroceder");
+		int option = this.input.leerInt("opcion deseada", 1, 3);
 		System.out.println("\n\n\n");
 		switch (option) {
 		case 1:
 			mostrarRespuestas();
 			break;
 		case 2:
+			crearRespuesta();
+			break;
+		case 3:
 			mostrarPreguntas();
 			break;
 		}
 	}
 	public void mostrarRespuestas() throws SQLException {
 		System.out.println("Respesutas de la pregunta CONTENIDO PREGUNTA");
+		String encabezado = "";
+		String separador = "";
+		int espacios = 108;
+		for (int i = 0; i < espacios; i++) {
+			if (i==0) {encabezado+=("id");}
+			if (i>="id".length() && i<espacios/3) {encabezado+=(" ");}
+			if (i==espacios/3) {encabezado+=("contenido");}
+			if (i>=(espacios/3)+"contenido".length() && i<espacios*2/3) {encabezado+=(" ");}
+			if (i==espacios*2/3) {encabezado+=("puntuacion");}
+			separador+="-";
+		}
+		System.out.println(encabezado);
+		System.out.println(separador);
 		// Se muestran las respuestas de la pregunta
-		SimulacionUtilities.mostrarRespuestas(preguntas_id);
-		System.out.println("1. Responder Pregunta\n2. retroceder");
+		SimulacionUtilities.mostrarRespuestas(preguntas_id, espacios);
+		System.out.println("1. Dar megusta a la Respuesta\n2. Responder a la pregunta\n3. retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 2);
 		System.out.println("\n\n\n");
 		switch (option) {
 		case 1:
-			crearRespuesta();
+			darMegusta();
 			break;
 		case 2:
+			crearRespuesta();
+			break;
+		case 3:
 			mostrarPreguntas();
 			break;
 		}
 
+	}
+	public void darMegusta() {
+		try {
+			mostrarPreguntas();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	public void crearRespuesta() throws SQLException {
 		// Se conecta con tabla respuestas, preguntas, usuario
@@ -701,7 +731,7 @@ public class Simulacion {
 		public void crearPlan() throws SQLException, ParseException {
 			int accion=-1;
 			while(accion==-1) {
-			accion=DataBase.AgregarRegistroLog("Planes", "Duracion","AND","Valor");
+			accion=DataBase.AgregarRegistroLog("planes", "Duracion","AND","Valor");
 			if(accion==-1) {
 				System.out.println("Plan ya existe. Intente nuevamente.");
 			}
