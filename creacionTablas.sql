@@ -72,12 +72,14 @@ insert into lastnamep (profesor_id, apellido_id) values ('2', '5');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('1','1','Una materia mela','Bases de Datos');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('2','2','Una materia regular','Admin General');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('1','2','Una materia mela otra vez','Proyecto 2');
+insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('4','2','La cagaron','Contabilidad');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','1');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','2');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','3');
 insert into usuarioscursos(curso_id, usuario_id) values ('2','1');
 insert into usuarioscursos(curso_id, usuario_id) values ('2','2');
 insert into usuarioscursos(curso_id, usuario_id) values ('3','1');
+insert into usuarioscursos(curso_id, usuario_id) values ('4','2');
 
 -- Foros
 insert into foros (curso_id, nombre) values ('1','Venecas');
