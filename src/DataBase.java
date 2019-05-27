@@ -1069,13 +1069,13 @@ public class DataBase {
 		}else {
 			System.out.println("No se encontro registro a eliminar");
 		}
-		int idArray[] =buscarExistenteArray("id",campo, datoAnt);
+		int idArray[] =buscarExistenteArray(nombre_tabla,"id",campo, datoAnt);
 		mostrarIDSconCampo(nombre_tabla,ids,idArray, "contenido");
 	      }
-	public static void ModificarRegistroCascada(String ids,String campo, String datoAnt, Object dato) throws SQLException {
+	public static void ModificarRegistroCascada(String tabla1,String ids,String campo, String datoAnt, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
-		int id[]=buscarExistenteArray(ids,campo, datoAnt);
+		int id[]=buscarExistenteArray(tabla1,ids,campo, datoAnt);
 		
 		for(int i=0;i<id.length;i++){if(id[i]>0) {
 	      String query = "update "+tabla+" set "+campo+" = ? where "+ids+" = "+id;
@@ -1150,8 +1150,9 @@ public class DataBase {
 	      	  }
 	      	  return "";
 	}
-	public static int[] buscarExistenteArray(String ids,String campoParaBuscar,  String datoABuscar) throws SQLException {
-		 String querys = "SELECT * FROM "+tabla+" WHERE "+campoParaBuscar+"='"+datoABuscar+"';";
+	public static int[] buscarExistenteArray(String tabla1,String ids,String campoParaBuscar,  String datoABuscar) throws SQLException {
+		accederATabla(tabla1); 
+		String querys = "SELECT * FROM "+tabla+" WHERE "+campoParaBuscar+"='"+datoABuscar+"';";
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
 	      

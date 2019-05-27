@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.Arrays;
 
 
 
@@ -36,7 +37,7 @@ public class SimulacionUtilities {
 		int respuesta = -1;
 		DataBase.accederATabla("respuestas");
 		try {
-			int[] ids = DataBase.buscarExistenteArray("id", "pregunta_id", Integer.toString(pregunta_id));
+			int[] ids = DataBase.buscarExistenteArray("respuestas","id", "pregunta_id", Integer.toString(pregunta_id));
 
 			String[] contenido = new String[ids.length];
 			String[] puntuacion = new String[ids.length];
@@ -73,6 +74,9 @@ public class SimulacionUtilities {
 			}
 
 			respuesta = inputSim.leerIntConArray("Respuesta", ids);
+			if(respuesta==ids.length+1) {
+				respuesta=-1;
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,12 +88,11 @@ public class SimulacionUtilities {
 		int respuesta = -1;
 		DataBase.accederATabla("preguntas");
 		try {
-			int[] ids = DataBase.buscarExistenteArray("id", "foro_id", Integer.toString(foro_id));
+			int[] ids = DataBase.buscarExistenteArray("preguntas","id", "foro_id", Integer.toString(foro_id));
 //			DataBase.mostrarIDSconCampo("preguntas", "id", ids, "contenido");
 			String[] contenido = new String[ids.length];
 			for (int i=0; i<ids.length;i++) {
 				contenido[i] = DataBase.buscarValorDeCampoSegunID("respuestas", "id", ids[i], "contenido").toString();
-
 				String id = Integer.toString(ids[i]);
 				
 				for (int j =0;j<12;j++) {
@@ -104,7 +107,9 @@ public class SimulacionUtilities {
 			}
 
 			respuesta = inputSim.leerIntConArray("Pregunta", ids);
-
+			if(respuesta==ids.length+1) {
+				respuesta=-1;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

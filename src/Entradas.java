@@ -123,14 +123,16 @@ public class Entradas {
 
 	public int leerIntConArray(String valor ,int[] ids) {
 		reader=new Scanner(System.in);
-		System.out.print("Ingrese Numero de ID de "+valor+" que desee seleccionar: ");
+		System.out.print("Ingrese Numero de ID de "+valor+" que desee seleccionar o "+(ids.length+1)+" para retroceder ");
 		int a= -1;
 		try {
 			a = Integer.parseInt(reader.nextLine());
 		} catch (Error e) {
 			a = leerIntConArray(valor, ids);
 		}
-
+		if(a==ids.length+1) {
+		}
+		else {
 		boolean repetir = true;
 		int i =0;
 		while(i<ids.length) {
@@ -147,6 +149,7 @@ public class Entradas {
 			return leerIntConArray(valor, ids);
 		}
 
+		}
 		return a;
 	}
 
