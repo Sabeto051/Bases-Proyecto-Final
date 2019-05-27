@@ -754,8 +754,17 @@ public class Simulacion {
 		System.out.println("Foro: "+DataBase.buscarValorDeCampoSegunID("foros","id", foro_id, "nombre"));
 		System.out.println("Pregunta: "+DataBase.buscarValorDeCampoSegunID("preguntas","id", pregunta_id, "contenido"));
 		System.out.println("Respuesta "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "contenido") 
-				  + "       Me gusta: "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion"));
+				  + "       Total Me gusta: "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion"));
 		System.out.println();
+		String idr=DataBase.buscarValorDeCampoSegunID("ulike", "usuario_id", usuarios_id, "respuesta_id").toString();
+		if(!idr.equals("")) {
+			meGusta=true;
+			System.out.println("Te gusta esta respuesta");
+		}
+		else {
+			meGusta=false;
+			System.out.println("");
+		}
 		System.out.println();
 		System.out.println("1. Dar me gusta a la Respuesta\n2. Quitar me gusta\n3. Responder a la pregunta\n4. retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 4);
@@ -764,37 +773,18 @@ public class Simulacion {
 			if(meGusta==false) {
 			darMegusta();
 			break;
-			}else {
-				System.out.println("aca2");
-			System.out.println("La respuesta ya habia recibido un like. Desea:\n1. Me gusta\n2. Ya no me gusta");
-			int option2 = this.input.leerInt("opcion deseada", 1, 2);
-			switch (option2) {
-			case 1:
-				mostrarMenuRespuesta();
-				break;
-			case 2:
-				darNoMegusta();
-				break;
-				}
-			break;
 			}
+			else {
+			mostrarMenuRespuesta();
+			break;}
 		case 2:
 			if(meGusta==true) {
 				darNoMegusta();
 				break;
-				}else {
-				System.out.println("La respuesta no ha recibido un like. Desea:\n1. Me gusta\n2. No me gusta");
-				int option2 = this.input.leerInt("opcion deseada", 1, 2);
-				switch (option2) {
-				case 1:
-					darMegusta();
-					break;
-				case 2:
-					mostrarMenuRespuesta();
-					break;
-					}
-				break;
 				}
+			else {
+				mostrarMenuRespuesta();
+				break;}
 		case 3:
 			crearRespuesta();
 			break;
@@ -805,16 +795,17 @@ public class Simulacion {
 	}
 	public void darMegusta() throws ParseException {
 		try {
+
+				int puntuacionAnterior=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion").toString());
+				int puntNueva=puntuacionAnterior+1;
+				Object dato=puntNueva;
+				String respuesta_id_string=Integer.toString(respuesta_id);
+				System.out.println(puntuacionAnterior);
+				System.out.println(puntNueva);
+				DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
+				meGusta=true;
+			
 			mostrarMenuRespuesta();
-			int puntuacionAnterior=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion").toString());
-			int puntNueva=puntuacionAnterior+1;
-			Object dato=puntNueva;
-			String respuesta_id_string=Integer.toString(respuesta_id);
-			System.out.println(puntuacionAnterior);
-			System.out.println(puntNueva);
-			DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
-			meGusta=true;
-			//mostrarMenuRespuesta();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
