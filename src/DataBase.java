@@ -1021,6 +1021,20 @@ public class DataBase {
 			System.out.println("No se encontro registro a eliminar");
 		}
 	}
+	public static void EliminarRegistroBuscando2campos(String tabla1,String ids,String id,String campo,  String dato,String campo2,  String dato2) throws SQLException {
+		accederATabla(tabla1);
+		int id1=buscarExistente(tabla1,ids,ids,id);
+	
+		if(id1>0) {
+		String query = "delete from "+tabla+" where "+campo+" = "+ dato +" and "+ campo2+" = "+dato2 +"";
+		System.out.println(query);
+	      PreparedStatement preparedStmt = dbConnection.prepareStatement(query);
+	      preparedStmt.execute();
+	      }
+		else {
+			System.out.println("No se encontro registro a eliminar");
+		}
+	}
 	public static void ModificarRegistroUnico(String tabla1,String ids,String campoAnt, String datoAnt,String campo, Object dato) throws SQLException {
 		// our SQL SELECT query. 
 	      // if you only need a few columns, specify them by name instead of using "*"
@@ -1101,7 +1115,6 @@ public class DataBase {
 	public static int buscarExistente(String tabla1,String ids,String campo,  String dato) throws SQLException {
 		accederATabla(tabla1); 
 		String querys = "SELECT * FROM "+tabla1+" WHERE "+campo+"='"+dato+"';";
-
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
 	      
@@ -1124,6 +1137,41 @@ public class DataBase {
 	    	 tipo_campo = resultSet.getString("TYPE_NAME");
 	      }
 		String querys = "SELECT * FROM "+tabla1+" where "+ids+" = "+id;
+	      // create the java statement
+	      Statement st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	      ResultSet rs = st.executeQuery(querys);
+	      // iterate through the java resultset
+	      	  Object campoMostrar="";
+	      	  while(rs.next()) {
+	      		if(tipo_campo.equalsIgnoreCase("INT")){
+	      			campoMostrar =rs.getInt(campo);
+	      			return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("VARCHAR")){
+		    		  campoMostrar = rs.getString(campo);
+		    		  return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("FLOAT")){
+		    			campoMostrar = rs.getFloat(campo);
+		    			return campoMostrar;
+		    	  }
+		    	  if(tipo_campo.equalsIgnoreCase("TEXT") || tipo_campo.equalsIgnoreCase("DATETIME") ){
+		    		  campoMostrar = rs.getString(campo);
+		    		  return campoMostrar;
+		    	  }
+	      	  }
+	      	  return "";
+	}
+	public static Object buscarValorDeCampoSegun2ID(String tabla1,String ids, String id,String id2, String campo2,String campo) throws SQLException {
+		DataBase.accederATabla(tabla1);
+		DatabaseMetaData metadata = dbConnection.getMetaData();
+	      ResultSet resultSet = metadata.getColumns(DataBase.dataBase, null, DataBase.tabla, campo);
+	      String tipo_campo ="";
+	      while (resultSet.next()) {
+	    	 tipo_campo = resultSet.getString("TYPE_NAME");
+	      }
+		String querys = "SELECT * FROM "+tabla1+" where "+ids+" = "+id + " and "+id2+" = "+campo2;
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
@@ -1305,6 +1353,9 @@ public class DataBase {
 		      // execute the query, and get a java resultset
 		      ResultSet rs2 = st2.executeQuery(querys);
 		      int cont=0;
+		 
+		
+		      
 		      while(rs2.next()) {
 		    	  ids=Arrays.copyOf(ids, ids.length+1);
 		    	  ids[cont]=buscarExistente(tablaASegmentar, idss, campoParaSegmentar, rs2.getString(mostrar));
@@ -1320,7 +1371,58 @@ public class DataBase {
 		      return ids;
 		      	  
 		}
-	
+	public static int [] mostrarTablaSegunCriterio2(String mostrar,String tablaASegmentar,String[] at1,String idss,
+			String campoParaSegmentar, String campoASeleccionar,String numerado, String noNumericID) throws SQLException {
+			accederATabla(tablaASegmentar);
+			String ats="";
+			for(int i=0;i<at1.length;i++) {
+				if(i<at1.length-1) {
+				ats=ats+at1[i]+",";}
+				else {
+					ats=ats+at1[i];
+				}
+			}
+			String querys = "SELECT "+ats+" FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+" = " +campoASeleccionar;
+		      // create the java sta tement
+				int [] ids=new int[0];
+		      Statement st = dbConnection.createStatement();
+		      // execute the query, and get a java resultset
+		      ResultSet rs = st.executeQuery(querys);
+		     if(numerado.equalsIgnoreCase("numerado")) {
+		    	    if(noNumericID.equals("si")) {
+		    	    	mostrarResultSetConCont(rs);}
+		    	    else {
+		    	    	mostrarResultSetConContSinID(rs);
+		    	    }
+		     }else {
+		    	 if(noNumericID.equals("si")) {
+		    	    	mostrarResultSet(rs);}
+		    	    else {
+		    	    	mostrarResultSetSinID(rs);
+		    	    }
+		     }
+		      Statement st2 = dbConnection.createStatement();
+		      // execute the query, and get a java resultset
+		      ResultSet rs2 = st2.executeQuery(querys);
+		      int cont=0;
+		 
+		
+		      
+		      while(rs2.next()) {
+		    	  ids=Arrays.copyOf(ids, ids.length+1);
+		    	  ids[cont]=buscarExistente(tablaASegmentar, idss, mostrar, rs2.getString(mostrar));
+		    	  cont++;
+		      }
+		      if(ids.length==0) {
+		    	  ids=Arrays.copyOf(ids, ids.length+1);
+		    	  ids[cont]=0;
+		    	  cont++;
+		      }
+		      
+		      
+		      return ids;
+		      	  
+		}
 	public static ResultSet select2criteriosLog(String tablas, String campo1, int dato1, String log, String campo2, int dato2) throws SQLException {
 		accederATabla(tablas);
 		String querys = "SELECT * FROM "+tabla+" WHERE "+ campo1+ "="+dato1 + " "+ log+ " "+ campo2+ "="+dato2;

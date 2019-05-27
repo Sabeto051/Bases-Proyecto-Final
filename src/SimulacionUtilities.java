@@ -1,5 +1,9 @@
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 
 
@@ -10,11 +14,17 @@ public class SimulacionUtilities {
 	public static void crearPregunta(int usuario_id, int foro_id) throws SQLException {
 		String pregunta = inputSim.leerString("Pregunta");
 		DataBase.accederATabla("Preguntas");
-		Object[] datos = new Object[] {foro_id,usuario_id,pregunta};
-		String[] namess = new String[] {"foro_id","usuario_id","contenido"};
-		String[] typess =  new String[] {"INT", "INT", "TEXT"};
 		try {
-			DataBase.AgregarRegistro("Preguntas","");
+			Object datos[]=new Object[4];
+			datos[0]=foro_id;
+			datos[1]=usuario_id;
+			datos[2]=pregunta;
+			Calendar c = Calendar.getInstance();
+			DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+			Date date22=c.getTime();
+			String fechaHoy=dateFormat1.format(date22);
+			datos[3]=fechaHoy;
+			DataBase.AgregarRegistroCONDatos("id", "preguntas", "id", datos);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -84,11 +94,11 @@ public class SimulacionUtilities {
 		return respuesta;
 	}
 	
-	public static int mostrarPreguntas(int foro_id) {
-		int respuesta = -1;
+	public static int mostrarPreguntas(String foro_id) {
 		DataBase.accederATabla("preguntas");
+		int pregunta=0;
 		try {
-			int[] ids = DataBase.buscarExistenteArray("preguntas","id", "foro_id", Integer.toString(foro_id));
+			/*int[] ids = DataBase.buscarExistenteArray("preguntas","id", "foro_id", Integer.toString(foro_id));
 //			DataBase.mostrarIDSconCampo("preguntas", "id", ids, "contenido");
 			String[] contenido = new String[ids.length];
 			for (int i=0; i<ids.length;i++) {
@@ -109,11 +119,23 @@ public class SimulacionUtilities {
 			respuesta = inputSim.leerIntConArray("Pregunta", ids);
 			if(respuesta==ids.length+1) {
 				respuesta=-1;
+			}*/
+			String atributos[]=new String[1];
+			atributos[0]="contenido";
+			int pregIDs[]=DataBase.mostrarTablaSegunCriterio2("contenido","preguntas",atributos,"id","foro_id", foro_id,"numerado","no");
+			pregunta=inputSim.leerInt("la pregunta a escoger o "+(pregIDs.length+1) +" para retroceder", 1, pregIDs.length+1);
+			if(pregunta==pregIDs.length+1) {
+				pregunta=-1;
+				return pregunta;
 			}
+			else {
+			return pregIDs[pregunta-1];
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return respuesta;
+		return pregunta;
 	}
 	
 	

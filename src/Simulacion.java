@@ -151,7 +151,7 @@ public class Simulacion {
 		boolean error=true;
 		while(error==true) {
 			error=false;
-		String tel="3022179215";//this.input.leerString("su telefono");
+		String tel="3008106969";//this.input.leerString("su telefono");
 		int id=DataBase.buscarExistente("usuarios","id","telefono", tel);
 		if(id==-1) {
 			System.out.println("Telefono no existe");
@@ -162,7 +162,7 @@ public class Simulacion {
 			boolean errorContra=true;
 			while(errorContra==true) {
 			errorContra=false;
-			String contra="dank";//this.input.leerString("Contrasena");
+			String contra="rank";//this.input.leerString("Contrasena");
 			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("usuarios","id",usuarios_id, "pwd").toString())) {
 				errorContra=false;
 			}
@@ -504,7 +504,7 @@ public class Simulacion {
 			mostrarPlanUser();
 		}
 		else {
-		escuela_id=in;
+		escuela_id=opciones[in-1];
 		mostrarCarreras();
 		
 		} // de la escuela
@@ -522,7 +522,7 @@ public class Simulacion {
 		String ats[]=new String[2];
 		ats[0]="nombre";
 		ats[1]="descripcion";
-		int opciones[]=DataBase.mostrarTablaSegunCriterio("nombre","carreras",ats,"id","escuela_id",Integer.toString(escuela_id),"numerado","no");
+		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","carreras",ats,"id","escuela_id",Integer.toString(escuela_id),"numerado","no");
 		System.out.println();
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();
@@ -532,7 +532,7 @@ public class Simulacion {
 				mostrarEscuelas();
 			}
 			else {
-				carrera_id=in;
+				carrera_id=opciones[in-1];
 				mostrarCursos(); 
 			}
 		}
@@ -552,7 +552,7 @@ public class Simulacion {
 		String ats[]=new String[2];
 		ats[0]="nombre";
 		ats[1]="descripcion";
-		int opciones[]=DataBase.mostrarTablaSegunCriterio("nombre","cursos",ats,"id","carrera_id",Integer.toString(carrera_id),"numerado","no");
+		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","cursos",ats,"id","carrera_id",Integer.toString(carrera_id),"numerado","no");
 		System.out.println();
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();	
@@ -561,7 +561,7 @@ public class Simulacion {
 				mostrarCarreras(); 
 			}
 			else {
-				curso_id=in;
+				curso_id=opciones[in-1];
 				prof_id=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "profesor_id").toString());
 				int PName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("firstnamep", "profesor_id", prof_id, "nombre_id").toString());
 				int PLName=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("lastnamep", "profesor_id", prof_id, "apellido_id").toString());
@@ -604,7 +604,7 @@ public class Simulacion {
 		System.out.println("Foros");
 		String ats[]=new String[1];
 		ats[0]="nombre";
-		int opciones[]=DataBase.mostrarTablaSegunCriterio("nombre","foros",ats,"id","curso_id",Integer.toString(curso_id),"numerado","no");
+		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","foros",ats,"id","curso_id",Integer.toString(curso_id),"numerado","no");
 		System.out.println();
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();
@@ -613,7 +613,7 @@ public class Simulacion {
 				mostrarCursoMenu(); 
 			}
 			else {
-			foro_id=in;
+			foro_id=opciones[in-1];
 			mostrarForoMenu();
 			}
 	}
@@ -668,10 +668,10 @@ public class Simulacion {
 		System.out.println("Preguntas");
 		System.out.println();
 		System.out.println();
-		String encabezado = "id          contenido";
+		/*String encabezado = "id          contenido";
 		String separador = "-----------------------------------------------------------------------------";
-		System.out.println(encabezado + "\n" + separador);
-		pregunta_id = SimulacionUtilities.mostrarPreguntas(foro_id);
+		System.out.println(encabezado + "\n" + separador);*/
+		pregunta_id = SimulacionUtilities.mostrarPreguntas(Integer.toString(foro_id));
 		if(pregunta_id==-1) {
 			pregunta_id=0;
 			mostrarForoMenu();
@@ -756,18 +756,18 @@ public class Simulacion {
 		System.out.println("Respuesta "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "contenido") 
 				  + "       Total Me gusta: "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion"));
 		System.out.println();
-		String idr=DataBase.buscarValorDeCampoSegunID("ulike", "usuario_id", usuarios_id, "respuesta_id").toString();
-		if(!idr.equals("")) {
-			meGusta=true;
-			System.out.println("Te gusta esta respuesta");
-		}
-		else {
+		String idr=DataBase.buscarValorDeCampoSegun2ID("ulike", "usuario_id", Integer.toString(usuarios_id), "respuesta_id",Integer.toString(respuesta_id),"respuesta_id").toString();
+		if(idr.equals("") || idr.equals("0")) {
 			meGusta=false;
 			System.out.println("");
 		}
+		else {
+			meGusta=true;
+			System.out.println("Te gusta esta respuesta");
+		}
 		System.out.println();
-		System.out.println("1. Dar me gusta a la Respuesta\n2. Quitar me gusta\n3. Responder a la pregunta\n4. retroceder");
-		int option = this.input.leerInt("opcion deseada", 1, 4);
+		System.out.println("1. Dar me gusta a la Respuesta\n2. Quitar me gusta\n3. Retroceder");
+		int option = this.input.leerInt("opcion deseada", 1, 3);
 		switch (option) {
 		case 1:
 			if(meGusta==false) {
@@ -786,16 +786,12 @@ public class Simulacion {
 				mostrarMenuRespuesta();
 				break;}
 		case 3:
-			crearRespuesta();
-			break;
-		case 4:
 			mostrarRespuestas();
 			break;
 		}
 	}
 	public void darMegusta() throws ParseException {
 		try {
-
 				int puntuacionAnterior=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion").toString());
 				int puntNueva=puntuacionAnterior+1;
 				Object dato=puntNueva;
@@ -803,6 +799,10 @@ public class Simulacion {
 				System.out.println(puntuacionAnterior);
 				System.out.println(puntNueva);
 				DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
+				
+				Object datos[]=new Object[1];
+				datos[0]=respuesta_id;
+				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id, "Ulike", "usuario_id", datos);
 				meGusta=true;
 			
 			mostrarMenuRespuesta();
@@ -817,6 +817,11 @@ public class Simulacion {
 			Object dato=puntNueva;
 			String respuesta_id_string=Integer.toString(respuesta_id);
 			DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
+			String uid=Integer.toString(usuarios_id);
+			String rid=Integer.toString(respuesta_id);
+			System.out.println(usuarios_id);
+			System.out.println(rid);
+			DataBase.EliminarRegistroBuscando2campos("ulike", "usuario_id",uid,"usuario_id", uid, "respuesta_id", rid);
 			meGusta=false;
 			mostrarMenuRespuesta();
 		} catch (SQLException e) {
@@ -826,13 +831,11 @@ public class Simulacion {
 	public void crearRespuesta() throws SQLException, ParseException {
 		// Se conecta con tabla respuestas, preguntas, usuario
 		SimulacionUtilities.crearRespuesta(usuarios_id, pregunta_id);
-		System.out.println("\n\n\n");
 		mostrarPreguntas();
 	}
 	public void crearPregunta() throws SQLException, ParseException {
 		// Se conecta con tabla usuarios, foro, pregunta
 		SimulacionUtilities.crearPregunta(usuarios_id, foro_id);
-		System.out.println("\n\n\n");
 		mostrarForoMenu();
 	}
 	
