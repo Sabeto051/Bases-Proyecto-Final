@@ -23,7 +23,7 @@ create table if not exists firstnameu(usuario_id int, nombre_id int, primary key
 create table if not exists lastnameu(usuario_id int, apellido_id int, primary key(usuario_id, apellido_id), index u_id (usuario_id), index a_id (apellido_id), foreign key(usuario_id) references usuarios(id) on update cascade on delete cascade, foreign key (apellido_id) references apellidos(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists firstnamep(profesor_id int, nombre_id int, primary key(profesor_id, nombre_id), index p_id (profesor_id), index n_id (nombre_id), foreign key(profesor_id) references profesores(id) on update cascade on delete cascade, foreign key (nombre_id) references nombres(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists lastnamep(profesor_id int, apellido_id int, primary key(profesor_id, apellido_id), index p_id (profesor_id), index n_id (apellido_id), foreign key(profesor_id) references profesores(id) on update cascade on delete cascade, foreign key (apellido_id) references apellidos(id) on update cascade on delete cascade) ENGINE=INNODB;
-create table if not exists usuarioscursos(usuario_id int, curso_id int, primary key(usuario_id, curso_id), index u_id (usuario_id), index c_id (curso_id), foreign key (usuario_id) references usuarios(id) on update cascade on delete cascade, foreign key (curso_id) references cursos(id) on update cascade on delete cascade) ENGINE=INNODB;
+create table if not exists usuarioscursos(usuario_id int, curso_id int, completed boolean default false,primary key(usuario_id, curso_id), index u_id (usuario_id), index c_id (curso_id), foreign key (usuario_id) references usuarios(id) on update cascade on delete cascade, foreign key (curso_id) references cursos(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists usuariosvideos(usuario_id int, video_id int, primary key(usuario_id, video_id), index u_id (usuario_id), index v_id (video_id), foreign key (usuario_id) references usuarios(id) on update cascade on delete cascade, foreign key (video_id) references videos(id) on update cascade on delete cascade) ENGINE=INNODB;
 create table if not exists ulike(usuario_id int, respuesta_id int, primary key(usuario_id, respuesta_id), foreign key (usuario_id) references usuarios(id) on update cascade on delete cascade, foreign key (respuesta_id) references respuestas(id) on update cascade on delete cascade) ENGINE=INNODB;
 -- crear los registros default de las tablas
@@ -54,6 +54,7 @@ insert into escuelas (descripcion, nombre) values('No hacen nada', 'administrati
 insert into carreras (descripcion, nombre, escuela_id) values ('La mejor ingenieria','Ingenieria de Sistemas','1');
 insert into carreras (descripcion, nombre, escuela_id) values ('una ingenieria ahi','Ingenieria Administrativa','1');
 insert into carreras (descripcion, nombre, escuela_id) values ('Los que ganan mas plata','Medicina','2');
+insert into carreras (descripcion, nombre, escuela_id) values ('Que chiste','Administracion','3');
 
 -- Profesores
 insert into profesores (telefono, pwd, salario) values ('3001003020','profe','100000');
@@ -71,12 +72,14 @@ insert into lastnamep (profesor_id, apellido_id) values ('2', '5');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('1','1','Una materia mela','Bases de Datos');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('2','2','Una materia regular','Admin General');
 insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('1','2','Una materia mela otra vez','Proyecto 2');
+insert into cursos (carrera_id, profesor_id, descripcion, nombre) values ('4','2','La cagaron','Contabilidad');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','1');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','2');
 insert into usuarioscursos(curso_id, usuario_id) values ('1','3');
 insert into usuarioscursos(curso_id, usuario_id) values ('2','1');
 insert into usuarioscursos(curso_id, usuario_id) values ('2','2');
 insert into usuarioscursos(curso_id, usuario_id) values ('3','1');
+insert into usuarioscursos(curso_id, usuario_id) values ('4','2');
 
 -- Foros
 insert into foros (curso_id, nombre) values ('1','Venecas');
@@ -119,7 +122,7 @@ insert into planesescuela(plan_id, escuela_id) values ('1', '1');
 insert into planesescuela(plan_id, escuela_id) values ('2', '3');
 insert into planesescuela(plan_id, escuela_id) values ('3', '2');
 
---ULike
+-- ULike
 insert into ulike(usuario_id,respuesta_id) values(2,1);
 update respuestas set puntuacion=1 where id=1;
                                                                                               
