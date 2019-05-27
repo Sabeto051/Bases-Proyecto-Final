@@ -119,6 +119,11 @@ insert into planesescuela(plan_id, escuela_id) values ('1', '1');
 insert into planesescuela(plan_id, escuela_id) values ('2', '3');
 insert into planesescuela(plan_id, escuela_id) values ('3', '2');
 
+--ULike
+insert into ulike(usuario_id,respuesta_id) values(2,1);
+update respuestas set puntuacion=1 where id=1;
+                                                                                              
+                
 -- test
 
 
