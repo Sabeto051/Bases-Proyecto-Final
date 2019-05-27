@@ -11,9 +11,10 @@ public class SimulacionUtilities {
 	static Entradas inputSim = new Entradas();
 	
 	
-	public static void crearPregunta(int usuario_id, int foro_id) throws SQLException {
+	public static int crearPregunta(int usuario_id, int foro_id) throws SQLException {
 		String pregunta = inputSim.leerString("Pregunta");
 		DataBase.accederATabla("Preguntas");
+		int id=0;
 		try {
 			Object datos[]=new Object[4];
 			datos[0]=foro_id;
@@ -24,30 +25,42 @@ public class SimulacionUtilities {
 			Date date22=c.getTime();
 			String fechaHoy=dateFormat1.format(date22);
 			datos[3]=fechaHoy;
-			DataBase.AgregarRegistroCONDatos("id", "preguntas", "id", datos);
+			id=DataBase.AgregarRegistroCONDatos("id", "preguntas", "id", datos);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return id;
+		
 	}
 	
-	public static void crearRespuesta(int usuario_id, int pregunta_id) throws SQLException {
-		String respuesta = inputSim.leerString("Respuesta ");
+	public static int crearRespuesta(int usuario_id, int pregunta_id) throws SQLException {
+		String respuesta = inputSim.leerString("Respuesta");
 		DataBase.accederATabla("Respuestas");
-		Object[] datos = new Object[] {pregunta_id,usuario_id,respuesta, 0};
-		String[] namess = new String[] {"pregunta_id","usuario_id","contenido", "puntuacion"};
-		String[] typess =  new String[] {"INT", "INT", "TEXT", "INT"};
+		int id=0;
 		try {
-			DataBase.AgregarRegistro("Respuestas","");
+			Object datos[]=new Object[5];
+			datos[0]=pregunta_id;
+			datos[1]=usuario_id;
+			datos[2]=respuesta;
+			Calendar c = Calendar.getInstance();
+			DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+			Date date22=c.getTime();
+			String fechaHoy=dateFormat1.format(date22);
+			datos[3]=fechaHoy;
+			datos[4]=0;
+			id=DataBase.AgregarRegistroCONDatos("id", "respuestas", "id", datos);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return id;
 	}
 	
-	public static int  mostrarRespuestas(int pregunta_id, int espacioss) {
+	//public static int  mostrarRespuestas(int pregunta_id, int espacioss) {
+	public static int  mostrarRespuestas(int pregunta_id) {
 		int respuesta = -1;
 		DataBase.accederATabla("respuestas");
 		try {
-			int[] ids = DataBase.buscarExistenteArray("respuestas","id", "pregunta_id", Integer.toString(pregunta_id));
+			/*int[] ids = DataBase.buscarExistenteArray("respuestas","id", "pregunta_id", Integer.toString(pregunta_id));
 
 			String[] contenido = new String[ids.length];
 			String[] puntuacion = new String[ids.length];
@@ -87,14 +100,28 @@ public class SimulacionUtilities {
 			if(respuesta==ids.length+1) {
 				respuesta=-1;
 			}
-
+*/
+			String atributos[]=new String[1];
+			atributos[0]="contenido";
+			int pregIDs[]=DataBase.mostrarTablaSegunCriterio2("contenido","respuestas",atributos,"id","pregunta_id",Integer.toString(pregunta_id),"numerado","no");
+			if(pregIDs[0]==-1 || pregIDs[0]==0) {
+				return -1;
+			}
+			respuesta=inputSim.leerInt("la respuesta a escoger o "+(pregIDs.length+1) +" para retroceder", 1, pregIDs.length+1);
+			if(respuesta==pregIDs.length+1) {
+				respuesta=-1;
+				return respuesta;
+			}
+			else {
+			return pregIDs[respuesta-1];
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return respuesta;
 	}
 	
-	public static int mostrarPreguntas(String foro_id) {
+	public static int mostrarPreguntas(int foro_id) {
 		DataBase.accederATabla("preguntas");
 		int pregunta=0;
 		try {
@@ -122,7 +149,10 @@ public class SimulacionUtilities {
 			}*/
 			String atributos[]=new String[1];
 			atributos[0]="contenido";
-			int pregIDs[]=DataBase.mostrarTablaSegunCriterio2("contenido","preguntas",atributos,"id","foro_id", foro_id,"numerado","no");
+			int pregIDs[]=DataBase.mostrarTablaSegunCriterio2("contenido","preguntas",atributos,"id","foro_id", Integer.toString(foro_id),"numerado","no");
+			if(pregIDs[0]==-1 || pregIDs[0]==0) {
+				return -1;
+			}
 			pregunta=inputSim.leerInt("la pregunta a escoger o "+(pregIDs.length+1) +" para retroceder", 1, pregIDs.length+1);
 			if(pregunta==pregIDs.length+1) {
 				pregunta=-1;

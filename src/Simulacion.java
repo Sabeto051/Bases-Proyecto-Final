@@ -495,6 +495,10 @@ public class Simulacion {
 		System.out.println();
 		int opciones[]=DataBase.mostrarTablaSegunCriterio("escuelas", "id", "escuela_id", "planesescuela", "plan_id",plan_id,"numerado");
 		System.out.println();
+		if(opciones[0]==-1 || opciones[0]==0) {
+			mostrarCursoMenu();
+		}
+		else {
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();
 		// se muestran las escuelas
@@ -506,7 +510,7 @@ public class Simulacion {
 		else {
 		escuela_id=opciones[in-1];
 		mostrarCarreras();
-		
+		}
 		} // de la escuela
 	}
 	public void mostrarCarreras() throws SQLException, ParseException {
@@ -524,6 +528,10 @@ public class Simulacion {
 		ats[1]="descripcion";
 		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","carreras",ats,"id","escuela_id",Integer.toString(escuela_id),"numerado","no");
 		System.out.println();
+		if(opciones[0]==-1 || opciones[0]==0) {
+			mostrarCursoMenu();
+		}
+		else {
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();
 		
@@ -536,7 +544,7 @@ public class Simulacion {
 				mostrarCursos(); 
 			}
 		}
-	
+	}
 	public void mostrarCursos() throws SQLException, ParseException {
 		curso_id=0;
 		prof_id=0;
@@ -554,6 +562,10 @@ public class Simulacion {
 		ats[1]="descripcion";
 		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","cursos",ats,"id","carrera_id",Integer.toString(carrera_id),"numerado","no");
 		System.out.println();
+		if(opciones[0]==-1 || opciones[0]==0) {
+			mostrarCursoMenu();
+		}
+		else {
 		System.out.println((opciones.length+1)+". Retroceder");
 		System.out.println();	
 			int in=input.leerInt("el curso a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
@@ -569,7 +581,7 @@ public class Simulacion {
 				prof_lname=DataBase.buscarValorDeCampoSegunID("apellidos","id", PLName, "apellido").toString();
 				mostrarCursoMenu();
 			}
-		
+		}
 	}
 	public void mostrarCursoMenu() throws SQLException, ParseException {
 		cls();
@@ -606,16 +618,21 @@ public class Simulacion {
 		ats[0]="nombre";
 		int opciones[]=DataBase.mostrarTablaSegunCriterio2("nombre","foros",ats,"id","curso_id",Integer.toString(curso_id),"numerado","no");
 		System.out.println();
-		System.out.println((opciones.length+1)+". Retroceder");
-		System.out.println();
+		if(opciones[0]==-1 || opciones[0]==0) {
+			mostrarCursoMenu();
+		}
+		else {
+			System.out.println((opciones.length+1)+". Retroceder");
+			System.out.println();
 			int in=input.leerInt("el foro a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
-			if(in==opciones.length+1) {
+			if(in==opciones.length+1 || opciones[0]==-1) {
 				mostrarCursoMenu(); 
 			}
 			else {
 			foro_id=opciones[in-1];
 			mostrarForoMenu();
 			}
+		}
 	}
 	public void mostrarForoMenu() throws SQLException, ParseException {
 		cls();
@@ -628,7 +645,7 @@ public class Simulacion {
 		System.out.println();
 		System.out.println();
 		System.out.println("1. Ver Preguntas del foro\n2. Hacer Pregunta\n3. Retroceder");
-		int option = this.input.leerInt("opcion deseada", 1, 2);
+		int option = this.input.leerInt("opcion deseada", 1, 3);
 		switch (option) {
 		case 1:
 			mostrarPreguntas();
@@ -671,7 +688,7 @@ public class Simulacion {
 		/*String encabezado = "id          contenido";
 		String separador = "-----------------------------------------------------------------------------";
 		System.out.println(encabezado + "\n" + separador);*/
-		pregunta_id = SimulacionUtilities.mostrarPreguntas(Integer.toString(foro_id));
+		pregunta_id = SimulacionUtilities.mostrarPreguntas(foro_id);
 		if(pregunta_id==-1) {
 			pregunta_id=0;
 			mostrarForoMenu();
@@ -692,7 +709,6 @@ public class Simulacion {
 		System.out.println();
 		System.out.println("1. Ver Respuestas a la pregunta\n2. Responder Pregunta\n3. Retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 3);
-		System.out.println("\n\n\n");
 		switch (option) {
 		case 1:
 			mostrarRespuestas();
@@ -719,7 +735,7 @@ public class Simulacion {
 		System.out.println("Respuestas ");
 		System.out.println();
 		System.out.println();
-		String encabezado = "";
+		/*String encabezado = "";
 		String separador = "";
 		int espacios = 108;
 		for (int i = 0; i < espacios; i++) {
@@ -733,8 +749,8 @@ public class Simulacion {
 		System.out.println(encabezado);
 		System.out.println(separador);
 		// Se muestran las respuestas de la pregunta
-		respuesta_id=SimulacionUtilities.mostrarRespuestas(pregunta_id, espacios);
-		System.out.println(respuesta_id);
+		respuesta_id=SimulacionUtilities.mostrarRespuestas(pregunta_id, espacios);*/
+		respuesta_id=SimulacionUtilities.mostrarRespuestas(pregunta_id);
 		if(respuesta_id==-1) {
 			respuesta_id=0;
 			mostrarPreguntaMenu();
@@ -830,13 +846,28 @@ public class Simulacion {
 	}	
 	public void crearRespuesta() throws SQLException, ParseException {
 		// Se conecta con tabla respuestas, preguntas, usuario
-		SimulacionUtilities.crearRespuesta(usuarios_id, pregunta_id);
-		mostrarPreguntas();
+		cls();
+		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
+		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
+		System.out.println("Carreras: "+DataBase.buscarValorDeCampoSegunID("carreras","id", carrera_id, "nombre"));
+		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
+		System.out.println("Profesor: "+prof_name +" "+prof_lname);
+		System.out.println("Foro: "+DataBase.buscarValorDeCampoSegunID("foros","id", foro_id, "nombre"));
+		System.out.println("Pregunta: "+DataBase.buscarValorDeCampoSegunID("preguntas","id", pregunta_id, "contenido"));
+		respuesta_id=SimulacionUtilities.crearRespuesta(usuarios_id, pregunta_id);
+		mostrarMenuRespuesta();
 	}
 	public void crearPregunta() throws SQLException, ParseException {
 		// Se conecta con tabla usuarios, foro, pregunta
-		SimulacionUtilities.crearPregunta(usuarios_id, foro_id);
-		mostrarForoMenu();
+		cls();
+		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
+		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
+		System.out.println("Carreras: "+DataBase.buscarValorDeCampoSegunID("carreras","id", carrera_id, "nombre"));
+		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
+		System.out.println("Profesor: "+prof_name +" "+prof_lname);
+		System.out.println("Foro: "+DataBase.buscarValorDeCampoSegunID("foros","id", foro_id, "nombre"));
+		pregunta_id=SimulacionUtilities.crearPregunta(usuarios_id, foro_id);
+		mostrarPreguntaMenu();
 	}
 	
 	
