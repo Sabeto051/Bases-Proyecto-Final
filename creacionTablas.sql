@@ -54,6 +54,7 @@ insert into escuelas (descripcion, nombre) values('No hacen nada', 'administrati
 insert into carreras (descripcion, nombre, escuela_id) values ('La mejor ingenieria','Ingenieria de Sistemas','1');
 insert into carreras (descripcion, nombre, escuela_id) values ('una ingenieria ahi','Ingenieria Administrativa','1');
 insert into carreras (descripcion, nombre, escuela_id) values ('Los que ganan mas plata','Medicina','2');
+insert into carreras (descripcion, nombre, escuela_id) values ('Que chiste','Administracion','3');
 
 -- Profesores
 insert into profesores (telefono, pwd, salario) values ('3001003020','profe','100000');
