@@ -215,8 +215,8 @@ public class Simulacion {
 		}
 		System.out.println();
 		System.out.println("1. Comprar nuevo Plan\n2. Acceder a Escuelas\n3. Ver Cursos completados\n"
-				+ "4. Ver preguntas hechas"+ "\n5. Modificar Datos de la Cuenta");
-		int option = this.input.leerInt("opcion deseada", 1, 5);
+				+ "4. Ver preguntas hechas"+"\n5. Ver respuestas hechas"+ "\n6. Modificar Datos de la Cuenta");
+		int option = this.input.leerInt("opcion deseada", 1, 6);
 		switch (option) {
 		case 1:
 			crearPlanParaUsuario();
@@ -244,16 +244,112 @@ public class Simulacion {
 			mostrarPreguntasUser();
 			break;
 		case 5:
+			mostrarRespuestasUser();
+			break;
+		case 6:
 			modificarInfoUser();
 			break;
 		}
 
 	}
 
-	public void mostrarPreguntasUser() {
-		// Se muestran las preguntas hechas por el usuario
-		this.input.leerString("Cualquier tecla para escoger Pregunta\n\n\n");
-		mostrarPreguntasUserRespuesta();
+	public void mostrarPreguntasUser() throws SQLException, ParseException {
+		int tamano_titulos=5;
+		String [] titulos=new String[tamano_titulos];
+		String [] nombreTablas=new String[tamano_titulos];
+		String [] identificadores=new String[tamano_titulos+1];
+		String tabla_especifica="Usuarios";
+		String id_especifico="usuario_id";
+		String dato_especifico="3";
+		titulos[0]="Pregunta";
+		titulos[1]="Nombre_Foro";
+		titulos[2]="Nombre_Curso";
+		titulos[3]="Nombre_Carrera";
+		titulos[4]="Nombre_Escuela";
+		nombreTablas[0]="Preguntas";
+		nombreTablas[1]="Foros";
+		nombreTablas[2]="Cursos";
+		nombreTablas[3]="Carreras";
+		nombreTablas[4]="Escuelas";
+		identificadores[0]="id";
+		identificadores[1]="contenido";
+		identificadores[2]="foro_id";
+		identificadores[3]="curso_id";
+		identificadores[4]="carrera_id";
+		identificadores[5]="escuela_id";
+		int opcion=DataBase.mostrarAtributosTablas(titulos, nombreTablas, identificadores, tabla_especifica, id_especifico,dato_especifico);
+		System.out.println();
+		System.out.println((opcion+1)+". Retroceder");
+		int in=input.leerInt(Integer.toString((opcion+1))+"para retroceder ",(opcion+1),(opcion+1));
+		if(opcion+1==in) {
+			mostrarPlanUser();
+		}
+		
+		
+		/*String s1="SELECT * FROM (SELECT Pregunta,Nombre_Foro,Nombre_Curso,Nombre_Carrera,Nombre_Escuela FROM ("
+						+"SELECT Pregunta,Nombre_Foro,Nombre_Curso,Nombre_Carrera,escuela_id FROM ("
+						+"SELECT Pregunta,Nombre_Foro,Nombre_Curso,carrera_id FROM ("
+						+"SELECT Pregunta,Nombre_Foro,curso_id FROM ("
+						+"SELECT Pregunta,foro_id FROM ("
+						+"(SELECT id as usuario_id FROM Usuarios where id = 3 ) as Q1 "
+						+"INNER JOIN"
+						+"(SELECT contenido as Pregunta,usuario_id as usuario_id2,foro_id FROM Preguntas) as Q2 "
+						+"ON Q1.usuario_id = Q2.usuario_id2 ) ) AS Q3 "
+						+"INNER JOIN"
+						//Hasta aca vamos bien
+				+"(SELECT id as foro_id2,nombre as Nombre_Foro,curso_id FROM Foros) as Q4 "
+				+"ON Q3.foro_id = Q4.foro_id2 ) AS Q5 "
+				+"INNER JOIN"
+				+"(SELECT id as curso_id2,nombre as Nombre_Curso,carrera_id FROM Cursos) as Q6 "
+				+"ON Q5.curso_id = Q6.curso_id2 ) as Q7 "
+				+"INNER JOIN"
+				+"(SELECT id as carrera_id2,nombre as Nombre_Carrera,escuela_id FROM Carreras) as Q8 "
+				+"ON Q7.carrera_id = Q8.carrera_id2 ) AS Q9 " 
+				+"INNER JOIN"
+				+"(SELECT id as escuela_id2,nombre as Nombre_Escuela FROM Escuelas) as Q10 "
+				+"ON Q9.escuela_id = Q10.escuela_id2 "
+				+") AS FINAL";*/
+
+	}
+
+	public void mostrarRespuestasUser() throws SQLException, ParseException {
+		int tamano_titulos=6;
+		String [] titulos=new String[tamano_titulos];
+		String [] nombreTablas=new String[tamano_titulos];
+		String [] identificadores=new String[tamano_titulos+1];
+		String tabla_especifica="Usuarios";
+		String id_especifico="usuario_id";
+		String dato_especifico="3";
+		titulos[0]="Respuesta";
+		titulos[1]="Pregunta";
+		titulos[2]="Nombre_Foro";
+		titulos[3]="Nombre_Curso";
+		titulos[4]="Nombre_Carrera";
+		titulos[5]="Nombre_Escuela";
+		nombreTablas[0]="Respuestas";
+		nombreTablas[1]="Preguntas";
+		nombreTablas[2]="Foros";
+		nombreTablas[3]="Cursos";
+		nombreTablas[4]="Carreras";
+		nombreTablas[5]="Escuelas";
+		identificadores[0]="id";
+		identificadores[1]="contenido";
+		identificadores[2]="pregunta_id";
+		identificadores[3]="foro_id";
+		identificadores[4]="curso_id";
+		identificadores[5]="carrera_id";
+		identificadores[6]="escuela_id";
+		int espacios=DataBase.espacioEntreCol;
+		DataBase.espacioEntreCol=28;
+		int opcion=DataBase.mostrarAtributosTablas(titulos, nombreTablas, identificadores, tabla_especifica, id_especifico,dato_especifico);
+		DataBase.espacioEntreCol=espacios;
+		System.out.println();
+		System.out.println((opcion+1)+". Retroceder");
+		int in=input.leerInt(Integer.toString((opcion+1))+"para retroceder ",(opcion+1),(opcion+1));
+		if(opcion+1==in) {
+			mostrarPlanUser();
+		}
+
 	}
 
 
