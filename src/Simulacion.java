@@ -757,7 +757,14 @@ public class Simulacion {
 		}
 	}
 	public void mostrarVideos() throws SQLException, ParseException {
-		System.out.println("Curso INSERTE NOMBRE AQUI");
+		video_id=0;
+		cls();
+		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
+		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
+		System.out.println("Carreras: "+DataBase.buscarValorDeCampoSegunID("carreras","id", carrera_id, "nombre"));
+		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
+		System.out.println("Profesor: "+prof_name +" "+prof_lname);
+		System.out.println("Videos");
 		video_id = SimulacionUtilities.mostrarVideos(curso_id);
 		if(video_id==-1) {
 			video_id=0;
@@ -768,10 +775,16 @@ public class Simulacion {
 		}
 	}
 	public void verVideo() throws SQLException, ParseException {
+		cls();
+		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
+		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
+		System.out.println("Carreras: "+DataBase.buscarValorDeCampoSegunID("carreras","id", carrera_id, "nombre"));
+		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
+		System.out.println("Profesor: "+prof_name +" "+prof_lname);
 		System.out.println("Video: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "nombre"));
 		SimulacionUtilities.verVideo(video_id,usuarios_id, curso_id);
 		System.out.println("Video visto");
-		this.input.leerString("Cualquier tecla para retroceder Curso\n\n\n");
+		this.input.leerString("Cualquier tecla para retroceder Curso");
 		mostrarCursoMenu();
 	}
 	public void mostrarPreguntas() throws SQLException, ParseException {
@@ -979,10 +992,10 @@ public class Simulacion {
 
 		//String cred[]=menu.MenuUsuarioContrasenaBD();
 		String cred[]=new String[2];
-		cred[0]="santiago";
-		cred[1]="asdf";
-		//		cred[0]="root";
-		//		cred[1]="holahola123";
+		//cred[0]="santiago";
+		//cred[1]="asdf";
+				cred[0]="root";
+				cred[1]="holahola123";
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
 
