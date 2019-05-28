@@ -1423,6 +1423,93 @@ public class DataBase {
 		      return ids;
 		      	  
 		}
+	public static int mostrarAtributosTablas(String [] titulos, String nombreTablas[] , String identificadores[], String tabla_especifica, String id_especifico, String dato_especifico) throws SQLException {
+		int tamano=titulos.length;
+		String query="";
+		query="SELECT * FROM (";
+		for(int i=0;i<titulos.length;i++) {
+			query=query+"SELECT ";
+			for(int j=0;j<tamano-i;j++) {
+				if(i==0 && j==tamano-1) {
+					query=query+titulos[j];
+				}else {
+				query=query+titulos[j]+",";}
+			}
+			if(i!=0) {
+			query=query+identificadores[identificadores.length-1-i+1];
+			}
+			query=query+" FROM (";
+		}
+		
+		int posTitulos=0;
+		int posIdenti=0;
+		int posNombres=0;
+		for(int i=1;i<tamano*2+2;i++) {
+			if(i%2!=0) {
+				if(i==1) {
+				query=query+"(SELECT "+identificadores[posIdenti]+" as "+id_especifico+" FROM "+tabla_especifica+" WHERE "+identificadores[posIdenti]+" = "+dato_especifico +" ) as Q"+i+" ";
+				}
+				else {
+					if(i==3) {
+					query=query+"ON Q"+(i-2)+"."+id_especifico+" = Q"+(i-2+1)+"."+id_especifico+"2 ) ) AS Q"+3+" ";
+					posIdenti++;
+					}
+					else {
+						if(i==tamano*2+1) {
+						query=query+"ON Q"+(i-2)+"."+identificadores[posIdenti]+" = Q"+(i-2+1)+"."+identificadores[posIdenti]+"2 ) AS FINAL";
+						}
+						else {
+					query=query+"ON Q"+(i-2)+"."+identificadores[posIdenti]+" = Q"+(i-2+1)+"."+identificadores[posIdenti]+"2 ) AS Q"+i+" ";
+					posIdenti++;
+						}
+					}
+				}
+				if(i<tamano*2+1) {
+				query=query+"INNER JOIN";
+				}
+				}
+			else {
+				String nombre="nombre";
+				if(nombreTablas[posNombres].equals("Preguntas")) {
+						nombre="contenido";
+				}
+				if(i==2) {
+				posIdenti++;
+				query=query+"(SELECT "+identificadores[posIdenti]+ " AS "+titulos[posTitulos]+","+id_especifico+" AS "+id_especifico+"2,"+identificadores[posIdenti+1]+" FROM "+nombreTablas[posNombres] +") AS Q"+i+" ";
+				posTitulos++;
+				posNombres++;
+				}
+				else {
+					if(i==tamano*2) {
+						query=query+"(SELECT id"+ " AS "+identificadores[posIdenti]+"2,"+nombre+" AS "+titulos[posTitulos]+" FROM "+nombreTablas[posNombres] +") AS Q"+i+" ";
+						posTitulos++;
+						posNombres++;
+					}
+					else {
+				query=query+"(SELECT id"+ " AS "+identificadores[posIdenti]+"2,"+nombre +" AS "+titulos[posTitulos]+","+identificadores[posIdenti+1]+" FROM "+nombreTablas[posNombres] +") AS Q"+i+" ";
+				posTitulos++;
+				posNombres++;
+					}
+				}
+				
+			}
+		}
+		//System.out.println(query);
+		Statement st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	      ResultSet resultset = st.executeQuery(query);
+	      mostrarResultSetConContSinID(resultset);
+	      st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	      
+	      resultset = st.executeQuery(query);
+	      int cont=0;
+	      while(resultset.next()) {
+	    	  cont++;
+	      }
+		return cont;
+		
+		}
 	public static ResultSet select2criteriosLog(String tablas, String campo1, int dato1, String log, String campo2, int dato2) throws SQLException {
 		accederATabla(tablas);
 		String querys = "SELECT * FROM "+tabla+" WHERE "+ campo1+ "="+dato1 + " "+ log+ " "+ campo2+ "="+dato2;
@@ -1598,7 +1685,7 @@ public class DataBase {
 	     for(int i=1;i<tamano+1;i++) {
 	    	 int espacios=espacioEntreCol-rs.getMetaData().getColumnName(i).length();
    		  String spaces="";
-   		  for(int k=0;k<espacios;k++) {
+   		  for(int k=0;k<espacios-3;k++) {
    			  spaces=spaces+" ";
    		  }
     			System.out.print("   "+rs.getMetaData().getColumnName(i)+spaces);
@@ -1709,6 +1796,8 @@ public class DataBase {
 		long diffInMillies = d11.getTime() - d12.getTime();
 		return diffInMillies;
 	}	
+	
+
 }
 
 
