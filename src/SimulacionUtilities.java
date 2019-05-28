@@ -7,13 +7,15 @@ import java.util.Date;
 
 
 
+
+
 public class SimulacionUtilities {
 	static Entradas inputSim = new Entradas();
-	
-	
+
+
 	public static int crearPregunta(int usuario_id, int foro_id) throws SQLException {
 		String pregunta = inputSim.leerString("Pregunta");
-		DataBase.accederATabla("Preguntas");
+		DataBase.accederATabla("preguntas");
 		int id=0;
 		try {
 			Object datos[]=new Object[4];
@@ -30,12 +32,12 @@ public class SimulacionUtilities {
 			e.printStackTrace();
 		}
 		return id;
-		
+
 	}
-	
+
 	public static int crearRespuesta(int usuario_id, int pregunta_id) throws SQLException {
 		String respuesta = inputSim.leerString("Respuesta");
-		DataBase.accederATabla("Respuestas");
+		DataBase.accederATabla("respuestas");
 		int id=0;
 		try {
 			Object datos[]=new Object[5];
@@ -54,7 +56,7 @@ public class SimulacionUtilities {
 		}
 		return id;
 	}
-	
+
 	//public static int  mostrarRespuestas(int pregunta_id, int espacioss) {
 	public static int  mostrarRespuestas(int pregunta_id) {
 		int respuesta = -1;
@@ -100,7 +102,7 @@ public class SimulacionUtilities {
 			if(respuesta==ids.length+1) {
 				respuesta=-1;
 			}
-*/
+			 */
 			String atributos[]=new String[1];
 			atributos[0]="contenido";
 			int pregIDs[]=DataBase.mostrarTablaSegunCriterio2("contenido","respuestas",atributos,"id","pregunta_id",Integer.toString(pregunta_id),"numerado","no");
@@ -113,14 +115,14 @@ public class SimulacionUtilities {
 				return respuesta;
 			}
 			else {
-			return pregIDs[respuesta-1];
+				return pregIDs[respuesta-1];
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return respuesta;
 	}
-	
+
 	public static int mostrarPreguntas(int foro_id) {
 		DataBase.accederATabla("preguntas");
 		int pregunta=0;
@@ -131,7 +133,7 @@ public class SimulacionUtilities {
 			for (int i=0; i<ids.length;i++) {
 				contenido[i] = DataBase.buscarValorDeCampoSegunID("respuestas", "id", ids[i], "contenido").toString();
 				String id = Integer.toString(ids[i]);
-				
+
 				for (int j =0;j<12;j++) {
 					if (j==0) {
 						System.out.print(id);
@@ -159,14 +161,72 @@ public class SimulacionUtilities {
 				return pregunta;
 			}
 			else {
-			return pregIDs[pregunta-1];
+				return pregIDs[pregunta-1];
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return pregunta;
 	}
-	
-	
+
+	public static int mostrarVideos(int curso_id) {
+		curso_id =3;
+		DataBase.accederATabla("videos");
+		int video = 0;
+
+		try {
+			String atributos[]=new String[] {"nombre"};
+			int vidIDs[]=DataBase.mostrarTablaSegunCriterio2("nombre","videos",atributos,"id","curso_id", Integer.toString(curso_id),"numerado","no");
+			if(vidIDs[0]==-1 || vidIDs[0]==0) {
+				return -1;
+			}
+			video = inputSim.leerInt("el video a ver o "+(vidIDs.length+1) +" para retroceder", 1, vidIDs.length+1);
+			if(video==vidIDs.length+1) {
+				video=-1;
+				return video;
+			}
+			else {
+				return vidIDs[video-1];
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return video;
+	}
+
+	public static void verVideo(int video_id, int usuario_id) {
+		DataBase.accederATabla("usuariosvideos");
+		int id=0;
+		try {
+
+//			String ppp = (String)DataBase.buscarValorDeCampoSegunID("usuariosvideos","usuario_id", usuario_id, "video_id").toString();
+//			System.out.println("acajgvagjcajgcsjgacasc " + ppp);
+
+			int[] ids = DataBase.buscarExistenteArray("usuariosvideos", "usuario_id", "video_id", Integer.toString(video_id));
+			
+			boolean sePuedeAgregar = true;
+			for (int i : ids) {
+				if (i==usuario_id) {
+					sePuedeAgregar=false;
+					break;
+				}
+			}
+			
+			if (sePuedeAgregar) {
+
+				Object datos[]=new Object[1];
+				datos[0]= Integer.toString(video_id) ;
+				// agregar a usuariosvideos table
+				DataBase.AgregarRegistroCONDatos("usuario_id", usuario_id, "usuariosvideos", "usuario_id", datos);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

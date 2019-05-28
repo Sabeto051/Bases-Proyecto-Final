@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 
 
+
 public class Simulacion {
 	private Entradas input;
 	private int usuarios_id=0;
@@ -26,6 +27,7 @@ public class Simulacion {
 	private String prof_lname;
 	private int respuesta_id;
 	private boolean meGusta=false;
+	private int video_id=0;
 	public Simulacion() {
 		this.input = new Entradas();
 	}
@@ -87,9 +89,9 @@ public class Simulacion {
 		frame.dispose();
 		Entradas.reader.close();
 	}
-	
-	
-	
+
+
+
 	//Metodos relacionados con interfaz usuario
 	public void registerUser() throws SQLException, ParseException {
 		System.out.println("Usuario Nuevo");
@@ -97,49 +99,49 @@ public class Simulacion {
 		//crea nuevo usuario en tabla usuarios
 		boolean existe=true;
 		while(existe==true) {
-		existe=false;
-		String campoVerificar="telefono";
-		int id=DataBase.AgregarRegistro("Usuarios",campoVerificar);
-		if(id==-1) {
-			System.out.println("Telefono ya existe. Ingrese nuevamente el telefono.");
-			existe=true;
-		}
-		else {
-			usuarios_id=id;
-			//Agregar Nombre
-			System.out.println();
-			String nom=input.leerString("el nombre");
-			Object idN[]=new Object[1];
-			int idNombre=DataBase.buscarExistente("nombres", "id", "nombre", nom);
-			idN[0]=idNombre;
-			if(idNombre!=-1) {
-				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"FirstNameU", "usuario_id",idN);
-			}
-			else {
-				idN[0]=nom;
-				idNombre=DataBase.AgregarRegistroCONDatos("id","nombres", "nombre", idN);
-				idN[0]=idNombre;
-				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"FirstNameU", "usuario_id",idN);
-				
-			}
-			//Agregar Apellido
-			String ape=input.leerString("el apellido");
-			Object idA[]=new Object[1];
-			int idapellido=DataBase.buscarExistente("apellidos", "id", "apellido", ape);
-			idA[0]=idapellido;
-			if(idapellido!=-1) {
-				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"LastNameU", "usuario_id",idA);
-			}
-			else {
-				idA[0]=ape;
-				idapellido=DataBase.AgregarRegistroCONDatos("id","apellidos", "apellido", idA);
-				idA[0]=idapellido;
-				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"LastNameU", "usuario_id",idA);
-				
-			}
 			existe=false;
-			
-		}
+			String campoVerificar="telefono";
+			int id=DataBase.AgregarRegistro("Usuarios",campoVerificar);
+			if(id==-1) {
+				System.out.println("Telefono ya existe. Ingrese nuevamente el telefono.");
+				existe=true;
+			}
+			else {
+				usuarios_id=id;
+				//Agregar Nombre
+				System.out.println();
+				String nom=input.leerString("el nombre");
+				Object idN[]=new Object[1];
+				int idNombre=DataBase.buscarExistente("nombres", "id", "nombre", nom);
+				idN[0]=idNombre;
+				if(idNombre!=-1) {
+					DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"FirstNameU", "usuario_id",idN);
+				}
+				else {
+					idN[0]=nom;
+					idNombre=DataBase.AgregarRegistroCONDatos("id","nombres", "nombre", idN);
+					idN[0]=idNombre;
+					DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"FirstNameU", "usuario_id",idN);
+
+				}
+				//Agregar Apellido
+				String ape=input.leerString("el apellido");
+				Object idA[]=new Object[1];
+				int idapellido=DataBase.buscarExistente("apellidos", "id", "apellido", ape);
+				idA[0]=idapellido;
+				if(idapellido!=-1) {
+					DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"LastNameU", "usuario_id",idA);
+				}
+				else {
+					idA[0]=ape;
+					idapellido=DataBase.AgregarRegistroCONDatos("id","apellidos", "apellido", idA);
+					idA[0]=idapellido;
+					DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id,"LastNameU", "usuario_id",idA);
+
+				}
+				existe=false;
+
+			}
 		}
 		System.out.println();
 		mostrarPlanUser();
@@ -151,35 +153,35 @@ public class Simulacion {
 		boolean error=true;
 		while(error==true) {
 			error=false;
-		String tel="3008106969";//this.input.leerString("su telefono");
-		int id=DataBase.buscarExistente("usuarios","id","telefono", tel);
-		if(id==-1) {
-			System.out.println("Telefono no existe");
-			error=true;
-		}
-		else {
-			usuarios_id=id;
-			boolean errorContra=true;
-			while(errorContra==true) {
-			errorContra=false;
-			String contra="rank";//this.input.leerString("Contrasena");
-			if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("usuarios","id",usuarios_id, "pwd").toString())) {
-				errorContra=false;
+			String tel="3008106969";//this.input.leerString("su telefono");
+			int id=DataBase.buscarExistente("usuarios","id","telefono", tel);
+			if(id==-1) {
+				System.out.println("Telefono no existe");
+				error=true;
 			}
 			else {
-			System.out.println("Contrasena errada");
-			errorContra=true;
+				usuarios_id=id;
+				boolean errorContra=true;
+				while(errorContra==true) {
+					errorContra=false;
+					String contra="rank";//this.input.leerString("Contrasena");
+					if(contra.equalsIgnoreCase(DataBase.buscarValorDeCampoSegunID("usuarios","id",usuarios_id, "pwd").toString())) {
+						errorContra=false;
+					}
+					else {
+						System.out.println("Contrasena errada");
+						errorContra=true;
+					}
+				}
 			}
-		}
-		}
-		
+
 		}
 		mostrarPlanUser();
 	}
 	public void mostrarPlanUser() throws SQLException, ParseException {
 		// Se conecta la tabla planes
 		// Se conecta la tabla Usuarios-planes
-		
+
 		cls();
 		DataBase.accederATabla("Usuarios");
 		int Nid=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("firstnameu","usuario_id", usuarios_id, "nombre_id").toString());
@@ -191,24 +193,24 @@ public class Simulacion {
 		System.out.println();
 		plan_id=DataBase.mostrarTablaSegunCriterio("planes", "id", "plan_id", "usuariosplanes", "usuario_id",usuarios_id,"")[0];
 		if(plan_id>0) {
-		System.out.println();
-		System.out.println();
-		DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
-		System.out.println();
-		System.out.println();
-		Object fecha_fin=DataBase.buscarValorDeCampoSegunID("usuariosplanes","usuario_id", usuarios_id, "fecha_fin");
-		String f1=fecha_fin.toString();
-		Calendar c = Calendar.getInstance();
-		Date fin=c.getTime();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-		String f2 = dateFormat.format(fin);
-		
-		double diff=DataBase.diferenciaFecha(f1, f2);
-		if(diff<0) {
-			System.out.println("Plan se vencio");
-			plan_id=0;
-		}
-		
+			System.out.println();
+			System.out.println();
+			DataBase.mostrarResultSet(DataBase.select2criteriosLog("usuariosplanes", "usuario_id", usuarios_id, "AND","plan_id", plan_id));
+			System.out.println();
+			System.out.println();
+			Object fecha_fin=DataBase.buscarValorDeCampoSegunID("usuariosplanes","usuario_id", usuarios_id, "fecha_fin");
+			String f1=fecha_fin.toString();
+			Calendar c = Calendar.getInstance();
+			Date fin=c.getTime();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+			String f2 = dateFormat.format(fin);
+
+			double diff=DataBase.diferenciaFecha(f1, f2);
+			if(diff<0) {
+				System.out.println("Plan se vencio");
+				plan_id=0;
+			}
+
 		}
 		else {
 			System.out.println("   NA                                NA");
@@ -223,18 +225,18 @@ public class Simulacion {
 			break;
 		case 2:
 			if(plan_id>0){
-			mostrarEscuelas();}
+				mostrarEscuelas();}
 			else{
-			System.out.println("El plan esta vencido o no existe ningun plan. ");
-			System.out.println("Desea comprar nuevo plan.\n1. Si\n2. No ");
-			int acc=input.leerInt("que desea realizar ",1,2);
-			if(acc==1){
-			crearPlanParaUsuario();
-			}
-			else{
-			mostrarPlanUser();
-			}
-			
+				System.out.println("El plan esta vencido o no existe ningun plan. ");
+				System.out.println("Desea comprar nuevo plan.\n1. Si\n2. No ");
+				int acc=input.leerInt("que desea realizar ",1,2);
+				if(acc==1){
+					crearPlanParaUsuario();
+				}
+				else{
+					mostrarPlanUser();
+				}
+
 			}
 			break;
 		case 3:
@@ -285,27 +287,27 @@ public class Simulacion {
 			String tel=input.leerString("el telefono nuevo  ");
 			boolean existe=true;
 			while(existe==true) {
-			existe=false;
-			String campoVerificar="telefono";
-			int thi=DataBase.buscarExistente("Usuarios", "id", campoVerificar, tel);
-			if(thi>0) {
-				System.out.println("Telefono ya existe. Ingrese nuevamente el telefono.");
-				tel=input.leerString("el telefono nuevo  ");
-				existe=true;
-			}
-			else {
 				existe=false;
-			}
+				String campoVerificar="telefono";
+				int thi=DataBase.buscarExistente("Usuarios", "id", campoVerificar, tel);
+				if(thi>0) {
+					System.out.println("Telefono ya existe. Ingrese nuevamente el telefono.");
+					tel=input.leerString("el telefono nuevo  ");
+					existe=true;
+				}
+				else {
+					existe=false;
+				}
 			}
 			DataBase.ModificarRegistroUnico("Usuarios", "id", "telefono", 
-			telViejo, "telefono", tel);
+					telViejo, "telefono", tel);
 			modificarInfoUser();
 			break;
 		case 2:
 			System.out.println(   "La Contrasena vieja es        "+contraViejo);
 			String contra=input.leerString("la contrase�a nueva  ");
 			DataBase.ModificarRegistroUnico("Usuarios", "id", "pwd", 
-			contraViejo, "pwd", contra);
+					contraViejo, "pwd", contra);
 			modificarInfoUser();
 			break;
 		case 3:
@@ -324,7 +326,7 @@ public class Simulacion {
 				idN[0]=idNombre;
 				DataBase.ModificarRegistroUnico("FirstNameU", "usuario_id", 
 						"usuario_id", Integer.toString(usuarios_id), "nombre_id",idN[0]);
-				
+
 			}
 			modificarInfoUser();
 			break;
@@ -344,7 +346,7 @@ public class Simulacion {
 				idA[0]=idapellido;
 				DataBase.ModificarRegistroUnico("LastNameU", "usuario_id", 
 						"usuario_id", Integer.toString(usuarios_id), "apellido_id",idA[0]);
-				
+
 			}
 			modificarInfoUser();
 			break;
@@ -379,112 +381,112 @@ public class Simulacion {
 			}
 		}
 		if(cambiar==true) {
-		System.out.println("planes");
-		System.out.println();
-		DataBase.mostrarTablaConAtributoDeOtraTabla("id", "planes", "plan_id", "escuela_id", "planesescuela","id","escuelas","nombre");
-		// Se muestran planes disponibles
-		// Se escoge uno de los planes disponibles
-		Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","planes"));
-		DataBase.accederATabla("usuariosplanes");
-		if(plan_id>0) {
-		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id","usuario_id",Integer.toString(usuarios_id),"plan_id",option);
-		plan_id=Integer.parseInt(option.toString());
-		String fecha="";
-		int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
-		if(opcion_fecha==1) {
-			fecha=fechaHoy;
-		}
-		else {
-			boolean aceptada=false;
-			while(aceptada==false) {
-			aceptada=true;
-			int date1=input.leerInt("Dia ",1,31);
-			int date2=input.leerInt("Mes ",1,12);
-			int date3=input.leerInt("Ano ",1800,10000);
-			String dateS1=Integer.toString(date1);
-			String dateS2=Integer.toString(date2);
-			String dateS3=Integer.toString(date3);
-			if(date1<10 ) {
-				dateS1="0"+date1;
-			}
-			if(date2<10) {
-				dateS2="0"+date2;
-			}
-		
-			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
-			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
-			if(comp<0) {
-				//System.out.println("despues de hoy");
-			}
-			else {
-				System.out.println("La fecha a ingresar debe ser despues de hoy. Ingrese fecha nuevamente");
-				System.out.println("Fecha Hoy:                 "+fechaHoy);
-				System.out.println("Fecha Ingresada No Valida: "+fecha);
-				aceptada=false;
-			}
-			}
-		}
-		Object datos[]=new Object[2];
-		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
-		datos[1]=fecha2;
-		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
-		DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
-		
-		
-		}
-		else {
-		plan_id=Integer.parseInt(option.toString());
-		String fecha="";
-		int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
-		if(opcion_fecha==1) {
-			fecha=fechaHoy;
-		}
-		else {
-			boolean aceptada=false;
-			while(aceptada==false) {
-			aceptada=true;
-			int date1=input.leerInt("Dia ",1,31);
-			int date2=input.leerInt("Mes ",1,12);
-			int date3=input.leerInt("A�o ",1800,10000);
-			String dateS1=Integer.toString(date1);
-			String dateS2=Integer.toString(date2);
-			String dateS3=Integer.toString(date3);
-			if(date1<10 ) {
-				dateS1="0"+date1;
-			}
-			if(date2<10) {
-				dateS2="0"+date2;
-			}
-		
-			fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
-			double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
-			if(comp<0) {
-				//System.out.println("despues de hoy");
+			System.out.println("planes");
+			System.out.println();
+			DataBase.mostrarTablaConAtributoDeOtraTabla("id", "planes", "plan_id", "escuela_id", "planesescuela","id","escuelas","nombre");
+			// Se muestran planes disponibles
+			// Se escoge uno de los planes disponibles
+			Object option=this.input.leerInt("el numero del plan a escoger",1,DataBase.maxID("id","planes"));
+			DataBase.accederATabla("usuariosplanes");
+			if(plan_id>0) {
+				DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id","usuario_id",Integer.toString(usuarios_id),"plan_id",option);
+				plan_id=Integer.parseInt(option.toString());
+				String fecha="";
+				int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
+				if(opcion_fecha==1) {
+					fecha=fechaHoy;
+				}
+				else {
+					boolean aceptada=false;
+					while(aceptada==false) {
+						aceptada=true;
+						int date1=input.leerInt("Dia ",1,31);
+						int date2=input.leerInt("Mes ",1,12);
+						int date3=input.leerInt("Ano ",1800,10000);
+						String dateS1=Integer.toString(date1);
+						String dateS2=Integer.toString(date2);
+						String dateS3=Integer.toString(date3);
+						if(date1<10 ) {
+							dateS1="0"+date1;
+						}
+						if(date2<10) {
+							dateS2="0"+date2;
+						}
+
+						fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
+						double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
+						if(comp<0) {
+							//System.out.println("despues de hoy");
+						}
+						else {
+							System.out.println("La fecha a ingresar debe ser despues de hoy. Ingrese fecha nuevamente");
+							System.out.println("Fecha Hoy:                 "+fechaHoy);
+							System.out.println("Fecha Ingresada No Valida: "+fecha);
+							aceptada=false;
+						}
+					}
+				}
+				Object datos[]=new Object[2];
+				datos[0]=fecha;
+				String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
+				datos[1]=fecha2;
+				DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
+				DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
+
+
 			}
 			else {
-				System.out.println("La fecha a ingresar debe ser despues de hoy. Ingrese fecha nuevamente");
-				System.out.println("Fecha Hoy:                 "+fechaHoy);
-				System.out.println("Fecha Ingresada No Valida: "+fecha);
-				aceptada=false;
+				plan_id=Integer.parseInt(option.toString());
+				String fecha="";
+				int opcion_fecha=input.leerInt("Accion a realizar\n1.Fecha Actual\n2.Fecha Manualmente", 1, 2);
+				if(opcion_fecha==1) {
+					fecha=fechaHoy;
+				}
+				else {
+					boolean aceptada=false;
+					while(aceptada==false) {
+						aceptada=true;
+						int date1=input.leerInt("Dia ",1,31);
+						int date2=input.leerInt("Mes ",1,12);
+						int date3=input.leerInt("A�o ",1800,10000);
+						String dateS1=Integer.toString(date1);
+						String dateS2=Integer.toString(date2);
+						String dateS3=Integer.toString(date3);
+						if(date1<10 ) {
+							dateS1="0"+date1;
+						}
+						if(date2<10) {
+							dateS2="0"+date2;
+						}
+
+						fecha=dateS3+"-"+dateS2+"-"+dateS1+ " "+horaActual;
+						double comp=DataBase.diferenciaFecha(fechaHoy, fecha);
+						if(comp<0) {
+							//System.out.println("despues de hoy");
+						}
+						else {
+							System.out.println("La fecha a ingresar debe ser despues de hoy. Ingrese fecha nuevamente");
+							System.out.println("Fecha Hoy:                 "+fechaHoy);
+							System.out.println("Fecha Ingresada No Valida: "+fecha);
+							aceptada=false;
+						}
+					}
+				}
+				Object datos[]=new Object[3];
+				datos[0]=fecha;
+				String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
+				datos[1]=fecha2;
+				datos[2]=plan_id;
+				if(DataBase.buscarExistente("usuariosplanes", "usuario_id", "usuario_id",Integer.toString(usuarios_id))>0) {
+					DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
+					DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
+				}else {
+					DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "usuariosplanes", "usuario_id", datos);
+				}
 			}
-		}
-		}
-		Object datos[]=new Object[3];
-		datos[0]=fecha;
-		String fecha2= DataBase.sumarAFecha("planes",fecha,"id", plan_id, "duracion");
-		datos[1]=fecha2;
-		datos[2]=plan_id;
-		if(DataBase.buscarExistente("usuariosplanes", "usuario_id", "usuario_id",Integer.toString(usuarios_id))>0) {
-			DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_inicio",datos[0]);
-			DataBase.ModificarRegistroUnico("usuariosplanes","usuario_id", "usuario_id", Integer.toString(usuarios_id), "fecha_fin",datos[1]);
-		}else {
-			DataBase.AgregarRegistroCONDatos("usuario_id",usuarios_id, "usuariosplanes", "usuario_id", datos);
-		}
-		}
 		}
 		mostrarPlanUser();
-		}
+	}
 	public void mostrarEscuelas() throws SQLException, ParseException {
 		cls();
 		escuela_id=0;
@@ -499,18 +501,18 @@ public class Simulacion {
 			mostrarCursoMenu();
 		}
 		else {
-		System.out.println((opciones.length+1)+". Retroceder");
-		System.out.println();
-		// se muestran las escuelas
-		// se escoge una escuela
-		int in=input.leerInt("la escuela a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
-		if(in==opciones.length+1) {
-			mostrarPlanUser();
-		}
-		else {
-		escuela_id=opciones[in-1];
-		mostrarCarreras();
-		}
+			System.out.println((opciones.length+1)+". Retroceder");
+			System.out.println();
+			// se muestran las escuelas
+			// se escoge una escuela
+			int in=input.leerInt("la escuela a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
+			if(in==opciones.length+1) {
+				mostrarPlanUser();
+			}
+			else {
+				escuela_id=opciones[in-1];
+				mostrarCarreras();
+			}
 		} // de la escuela
 	}
 	public void mostrarCarreras() throws SQLException, ParseException {
@@ -532,9 +534,9 @@ public class Simulacion {
 			mostrarCursoMenu();
 		}
 		else {
-		System.out.println((opciones.length+1)+". Retroceder");
-		System.out.println();
-		
+			System.out.println((opciones.length+1)+". Retroceder");
+			System.out.println();
+
 			int in=input.leerInt("la carrera a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
 			if(in==opciones.length+1) {
 				mostrarEscuelas();
@@ -566,8 +568,8 @@ public class Simulacion {
 			mostrarCursoMenu();
 		}
 		else {
-		System.out.println((opciones.length+1)+". Retroceder");
-		System.out.println();	
+			System.out.println((opciones.length+1)+". Retroceder");
+			System.out.println();	
 			int in=input.leerInt("el curso a acceder o "+(opciones.length+1)+" para retroceder",1,opciones.length+1);
 			if(in==opciones.length+1) {
 				mostrarCarreras(); 
@@ -629,8 +631,8 @@ public class Simulacion {
 				mostrarCursoMenu(); 
 			}
 			else {
-			foro_id=opciones[in-1];
-			mostrarForoMenu();
+				foro_id=opciones[in-1];
+				mostrarForoMenu();
 			}
 		}
 	}
@@ -658,20 +660,23 @@ public class Simulacion {
 			break;
 		}
 	}
-	public void mostrarVideos() {
+	public void mostrarVideos() throws SQLException, ParseException {
 		System.out.println("Curso INSERTE NOMBRE AQUI");
-		// Se muestra la lista de videos del curso
-		// Si se puede, mostrar en una columna al lado de los videos cuales ha visto
-		this.input.leerString("Cualquier tecla para escoder Video\n\n\n");
-		verVideo();
+		video_id = SimulacionUtilities.mostrarVideos(curso_id);
+		if(video_id==-1) {
+			video_id=0;
+			mostrarCursoMenu();
+		}
+		else {
+			verVideo();
+		}
 	}
-	public void verVideo() {
-		System.out.println("Video INSERTE TITULO AQUI");
-		// se conecta la tabla videos y Estudiante-videos
-		// se agrega el video a videos vistos por el estudiante
+	public void verVideo() throws SQLException, ParseException {
+		System.out.println("Video: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "nombre"));
+		SimulacionUtilities.verVideo(video_id,usuarios_id);
 		System.out.println("Video visto");
 		this.input.leerString("Cualquier tecla para retroceder Curso\n\n\n");
-		mostrarVideos();
+		mostrarCursoMenu();
 	}
 	public void mostrarPreguntas() throws SQLException, ParseException {
 		cls();
@@ -694,7 +699,7 @@ public class Simulacion {
 			mostrarForoMenu();
 		}
 		else {
-		mostrarPreguntaMenu();}
+			mostrarPreguntaMenu();}
 	}
 	public void mostrarPreguntaMenu() throws SQLException, ParseException {
 		cls();
@@ -770,7 +775,7 @@ public class Simulacion {
 		System.out.println("Foro: "+DataBase.buscarValorDeCampoSegunID("foros","id", foro_id, "nombre"));
 		System.out.println("Pregunta: "+DataBase.buscarValorDeCampoSegunID("preguntas","id", pregunta_id, "contenido"));
 		System.out.println("Respuesta "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "contenido") 
-				  + "       Total Me gusta: "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion"));
+		+ "       Total Me gusta: "+DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion"));
 		System.out.println();
 		String idr=DataBase.buscarValorDeCampoSegun2ID("ulike", "usuario_id", Integer.toString(usuarios_id), "respuesta_id",Integer.toString(respuesta_id),"respuesta_id").toString();
 		if(idr.equals("") || idr.equals("0")) {
@@ -787,17 +792,17 @@ public class Simulacion {
 		switch (option) {
 		case 1:
 			if(meGusta==false) {
-			darMegusta();
-			break;
+				darMegusta();
+				break;
 			}
 			else {
-			mostrarMenuRespuesta();
-			break;}
+				mostrarMenuRespuesta();
+				break;}
 		case 2:
 			if(meGusta==true) {
 				darNoMegusta();
 				break;
-				}
+			}
 			else {
 				mostrarMenuRespuesta();
 				break;}
@@ -808,19 +813,19 @@ public class Simulacion {
 	}
 	public void darMegusta() throws ParseException {
 		try {
-				int puntuacionAnterior=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion").toString());
-				int puntNueva=puntuacionAnterior+1;
-				Object dato=puntNueva;
-				String respuesta_id_string=Integer.toString(respuesta_id);
-				System.out.println(puntuacionAnterior);
-				System.out.println(puntNueva);
-				DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
-				
-				Object datos[]=new Object[1];
-				datos[0]=respuesta_id;
-				DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id, "Ulike", "usuario_id", datos);
-				meGusta=true;
-			
+			int puntuacionAnterior=Integer.parseInt(DataBase.buscarValorDeCampoSegunID("respuestas","id", respuesta_id, "puntuacion").toString());
+			int puntNueva=puntuacionAnterior+1;
+			Object dato=puntNueva;
+			String respuesta_id_string=Integer.toString(respuesta_id);
+			System.out.println(puntuacionAnterior);
+			System.out.println(puntNueva);
+			DataBase.ModificarRegistroUnico("respuestas", "id", "id", respuesta_id_string, "puntuacion", dato);
+
+			Object datos[]=new Object[1];
+			datos[0]=respuesta_id;
+			DataBase.AgregarRegistroCONDatos("usuario_id", usuarios_id, "Ulike", "usuario_id", datos);
+			meGusta=true;
+
 			mostrarMenuRespuesta();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -869,22 +874,22 @@ public class Simulacion {
 		pregunta_id=SimulacionUtilities.crearPregunta(usuarios_id, foro_id);
 		mostrarPreguntaMenu();
 	}
-	
-	
-	
+
+
+
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		Menus menu = new Menus();
-		
+
 		//String cred[]=menu.MenuUsuarioContrasenaBD();
 		String cred[]=new String[2];
-		/*cred[0]="santiago";
-		cred[1]="asdf";*/
-		cred[0]="root";
-		cred[1]="holahola123";
+		cred[0]="santiago";
+		cred[1]="asdf";
+		//		cred[0]="root";
+		//		cred[1]="holahola123";
 		DataBase.username=cred[0];
 		DataBase.password=cred[1];
-		
+
 		Simulacion s = new Simulacion();
 		DataBase.Connect("Nisand");
 		s.ingreso();
