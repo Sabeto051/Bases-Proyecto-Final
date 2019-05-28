@@ -27,6 +27,7 @@ public class Simulacion {
 	private String prof_lname;
 	private int respuesta_id;
 	private boolean meGusta=false;
+	private boolean completado=false;
 	private int video_id=0;
 	public Simulacion() {
 		this.input = new Entradas();
@@ -262,7 +263,7 @@ public class Simulacion {
 		String [] identificadores=new String[tamano_titulos+1];
 		String tabla_especifica="Usuarios";
 		String id_especifico="usuario_id";
-		String dato_especifico="3";
+		String dato_especifico=Integer.toString(usuarios_id);
 		titulos[0]="Pregunta";
 		titulos[1]="Nombre_Foro";
 		titulos[2]="Nombre_Curso";
@@ -321,7 +322,7 @@ public class Simulacion {
 		String [] identificadores=new String[tamano_titulos+1];
 		String tabla_especifica="Usuarios";
 		String id_especifico="usuario_id";
-		String dato_especifico="3";
+		String dato_especifico=Integer.toString(usuarios_id);
 		titulos[0]="Respuesta";
 		titulos[1]="Pregunta";
 		titulos[2]="Nombre_Foro";
@@ -356,9 +357,9 @@ public class Simulacion {
 
 
 
-	public void mostrarPreguntasUserRespuesta() {
+	//public void mostrarPreguntasUserRespuesta() {
 		// Creo que este metodo se puede combinar con otro que está más abajo 
-	}
+	//}
 	public void modificarInfoUser() throws SQLException, ParseException {
 		cls();
 		System.out.println("Menu Modificacion de Cuenta");
@@ -452,10 +453,7 @@ public class Simulacion {
 		}
 	}
 	public void mostrarCursosCompletados() throws SQLException, ParseException {
-		// Se conecta con tabla Cursos , Usuarios y  Estudaintes-Cursos
-		// Se muestran los cursos completados
-		this.input.leerString("Cualquier tecla para retroceder\n\n\n");
-		mostrarPlanUser();
+		cursoTerminado();
 	}
 	public void crearPlanParaUsuario() throws SQLException, ParseException {
 		boolean cambiar=true;
@@ -648,6 +646,7 @@ public class Simulacion {
 		prof_id=0;
 		prof_name="";
 		prof_lname="";
+		completado=false;
 		cls();
 		System.out.println("Plan: "+DataBase.buscarValorDeCampoSegunID("planes","id", plan_id, "id"));
 		System.out.println("Escuela: "+DataBase.buscarValorDeCampoSegunID("escuelas","id", escuela_id, "nombre"));
@@ -688,6 +687,13 @@ public class Simulacion {
 		System.out.println("Carreras: "+DataBase.buscarValorDeCampoSegunID("carreras","id", carrera_id, "nombre"));
 		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
 		System.out.println("Profesor "+prof_name +" "+prof_lname);
+		System.out.println();
+		String existe=DataBase.buscarValorDeCampoSegun2ID("usuarioscursos", "usuario_id",Integer.toString(usuarios_id), "curso_id", Integer.toString(curso_id), "usuario_id").toString();
+		if(!existe.equals("")) {
+			System.out.println("El curso se ha terminado satisfactoriamente");
+		completado=true;
+		}
+		
 		System.out.println();
 		System.out.println("1. Acceder a los foros del curso\n2. Acceder a los videos\n3. Retroceder");
 		int option = this.input.leerInt("opcion deseada", 1, 3);
@@ -765,7 +771,7 @@ public class Simulacion {
 		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
 		System.out.println("Profesor: "+prof_name +" "+prof_lname);
 		System.out.println("Videos");
-		video_id = SimulacionUtilities.mostrarVideos(curso_id);
+		video_id = SimulacionUtilities.mostrarVideos(usuarios_id,curso_id);
 		if(video_id==-1) {
 			video_id=0;
 			mostrarCursoMenu();
@@ -782,8 +788,25 @@ public class Simulacion {
 		System.out.println("Cursos: "+DataBase.buscarValorDeCampoSegunID("cursos","id", curso_id, "nombre"));
 		System.out.println("Profesor: "+prof_name +" "+prof_lname);
 		System.out.println("Video: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "nombre"));
+		System.out.println();
+		System.out.println("Duracion: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "duracion"));
+		System.out.println("Descripcion: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "descripcion"));
+		System.out.println();
 		SimulacionUtilities.verVideo(video_id,usuarios_id, curso_id);
 		System.out.println("Video visto");
+		int completado0=SimulacionUtilities.mostrarVideosUsuario2(usuarios_id, curso_id, "PorCursos");
+		if(completado0<=0) {
+			String existe=DataBase.buscarValorDeCampoSegun2ID("usuarioscursos", "usuario_id",Integer.toString(usuarios_id), "curso_id", Integer.toString(curso_id), "usuario_id").toString();
+			if(existe.equals("")) {
+			Object datos[]=new Object[1];
+			datos[0]=curso_id;
+			DataBase.AgregarRegistroCONDatos("usuario_id", "usuarioscursos","", datos);
+			completado=true;
+			}
+			else {
+				completado=true;
+			}
+		}
 		this.input.leerString("Cualquier tecla para retroceder Curso");
 		mostrarCursoMenu();
 	}
@@ -983,7 +1006,16 @@ public class Simulacion {
 		pregunta_id=SimulacionUtilities.crearPregunta(usuarios_id, foro_id);
 		mostrarPreguntaMenu();
 	}
-
+	public void cursoTerminado() throws SQLException, ParseException {
+		cls();
+		System.out.println("Cursos Terminados ");
+		int opcion=DataBase.simpleInnerJoin("Cursos", "nombre","curso_id", "curso_id","usuarioscursos","usuario_id",Integer.toString(usuarios_id), "id", "Cursos");
+		int in=input.leerInt(Integer.toString((opcion+1))+" para retroceder ",(opcion+1),(opcion+1));
+		if(opcion+1==in) {
+			mostrarPlanUser();
+		}
+		
+	}
 
 
 

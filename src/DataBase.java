@@ -1171,7 +1171,7 @@ public class DataBase {
 	      while (resultSet.next()) {
 	    	 tipo_campo = resultSet.getString("TYPE_NAME");
 	      }
-		String querys = "SELECT * FROM "+tabla1+" where "+ids+" = "+id + " and "+id2+" = "+campo2;
+		String querys = "SELECT * FROM "+tabla1+" where "+ids+" = "+id + " and "+id2+" = '"+campo2+"'";
 	      // create the java statement
 	      Statement st = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
@@ -1193,11 +1193,14 @@ public class DataBase {
 		    	  }
 		    	  if(tipo_campo.equalsIgnoreCase("TEXT") || tipo_campo.equalsIgnoreCase("DATETIME") ){
 		    		  campoMostrar = rs.getString(campo);
+		 
 		    		  return campoMostrar;
 		    	  }
 	      	  }
+	   
 	      	  return "";
 	}
+	  		
 	public static int[] buscarExistenteArray(String tabla1,String ids,String campoParaBuscar,  String datoABuscar) throws SQLException {
 		accederATabla(tabla1); 
 		String querys = "SELECT * FROM "+tabla+" WHERE "+campoParaBuscar+"='"+datoABuscar+"';";
@@ -1440,7 +1443,6 @@ public class DataBase {
 			}
 			query=query+" FROM (";
 		}
-		
 		int posTitulos=0;
 		int posIdenti=0;
 		int posNombres=0;
@@ -1493,8 +1495,8 @@ public class DataBase {
 				}
 				
 			}
+			System.out.println(query);
 		}
-		//System.out.println(query);
 		Statement st = dbConnection.createStatement();
 	      // execute the query, and get a java resultset
 	      ResultSet resultset = st.executeQuery(query);
@@ -1788,7 +1790,24 @@ public class DataBase {
 	String strDate = dateFormat.format(date22);
 	return strDate;
 }
-	
+	public static int simpleInnerJoin(String mostrar,String atributo,String atributo2,String id1, String tabla1, String id2, String datoid2,String id3, String tabla2) throws SQLException {
+		String query="SELECT "+atributo+" AS "+mostrar+" FROM ( SELECT T1."+atributo2+" FROM ( SELECT "+atributo2+" FROM "+tabla1+" WHERE "+id2+" = "+datoid2+") "
+				+ "as T1 ) as T2 "
+				+" INNER JOIN (SELECT "+id3+ ", "+atributo+" FROM "+tabla2+") as T3 ON T2."+atributo2+"="+"T3."+id3;
+		Statement st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	      ResultSet resultset = st.executeQuery(query);
+	      int cont=0;
+	      while(resultset.next()) {
+	    	  cont++;
+	      }
+	     st = dbConnection.createStatement();
+	      // execute the query, and get a java resultset
+	     resultset = st.executeQuery(query);
+	      mostrarResultSetConContSinID(resultset);
+	      return cont;
+	      
+	}
 	public static double diferenciaFecha(String d1,String d2) throws SQLException, ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 		Date d11=format.parse(d1);

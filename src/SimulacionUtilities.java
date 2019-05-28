@@ -169,10 +169,15 @@ public class SimulacionUtilities {
 		}
 		return pregunta;
 	}
-
-	public static int mostrarVideos(int curso_id) {
+	public static void cls()
+	{
+		for(int i=0;i<50;i++) {
+			System.out.println();
+		}
+	}
+	public static int mostrarVideos(int usuario_id,int curso_id) {
 //		curso_id =3;
-		
+		cls();
 		DataBase.accederATabla("videos");
 		int video = 0;
 
@@ -182,10 +187,21 @@ public class SimulacionUtilities {
 			if(vidIDs[0]==-1 || vidIDs[0]==0) {
 				return -1;
 			}
-			video = inputSim.leerInt("el video a ver o "+(vidIDs.length+1) +" para retroceder", 1, vidIDs.length+1);
-			if(video==vidIDs.length+1) {
-				video=-1;
-				return video;
+			video = inputSim.leerInt("el video a ver o "+(vidIDs.length+1) +" para ver videos no vistos o "+(vidIDs.length+2) +" para retroceder", 1, vidIDs.length+2);
+			if(video>=vidIDs.length+1) {
+				if(video==vidIDs.length+2) {
+					video=-1;
+					return video;
+				}
+				else {
+					int op;
+					op=mostrarVideosUsuario(usuario_id, curso_id, "PorCursos");
+					if(op==-1){
+						op=mostrarVideos(usuario_id, curso_id);
+					}else {
+						return op;
+					}
+				}
 			}
 			else {
 				return vidIDs[video-1];
@@ -198,6 +214,142 @@ public class SimulacionUtilities {
 
 		return video;
 	}
+	public static int mostrarVideosUsuario2(int usuario_id, int curso_id, String PorCursos) {
+		DataBase.accederATabla("videos");
+		int video = 0;
+
+		try {
+			int vidIDs=DataBase.getRowCount("id", "videos");
+			int vidIDUs[]=DataBase.buscarExistenteArray("usuariosvideos", "video_id", "usuario_id", Integer.toString(usuario_id));
+			int vid[]=new int[vidIDs-vidIDUs.length];
+			int posVid2=0;
+			int cont=1;	
+			int posVid=0;
+		//	System.out.println("   "+"Nombre");
+			while(cont<vidIDs+1) {
+				if(posVid<vidIDUs.length) {
+				if(cont==vidIDUs[posVid]) {
+				posVid++;
+				}
+				else {
+				vid[posVid2]=cont;
+				posVid2++;
+				}
+				}else {
+				vid[posVid2]=cont;
+				posVid2++;	
+				}
+				cont++;
+			}
+			posVid=0;
+			cont=0;
+			int impri=1;
+			
+			int videosSinVer[]=new int[0];
+			while(cont<vidIDs+1 && posVid<vid.length) {
+			String VsinVer="";
+			String nombre_video="";
+			if(PorCursos.equalsIgnoreCase("PorCursos")) {
+			nombre_video=DataBase.buscarValorDeCampoSegun2ID("videos", "id", Integer.toString(vid[posVid]), "curso_id", Integer.toString(curso_id),"Nombre").toString();
+			}
+			else {
+			nombre_video=DataBase.buscarValorDeCampoSegunID("videos", "id",vid[posVid],"Nombre").toString();
+			}
+			posVid++;
+			if(nombre_video!="" && posVid<vid.length+1) {
+			if(PorCursos.equalsIgnoreCase("PorCursos")) {
+				VsinVer=DataBase.buscarValorDeCampoSegun2ID("videos", "id", Integer.toString(vid[posVid-1]), "curso_id", Integer.toString(curso_id),"id").toString();
+			}else {
+				VsinVer=Integer.toString(DataBase.buscarExistente("videos", "id", "nombre",nombre_video));
+			}
+			videosSinVer=Arrays.copyOf(videosSinVer, videosSinVer.length+1);
+			videosSinVer[videosSinVer.length-1]=Integer.parseInt(VsinVer);
+			//System.out.println(impri+". "+nombre_video);
+			impri++;
+			}
+			}
+			if(videosSinVer.length==0) {
+				return -1;
+			}
+			//int videos = inputSim.leerInt("el video a ver o "+(impri)+" para retroceder", 1, (impri));
+			return videosSinVer[0];
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return video;
+	}
+	
+	public static int mostrarVideosUsuario(int usuario_id, int curso_id, String PorCursos) {
+	DataBase.accederATabla("videos");
+	int video = 0;
+
+	try {
+		int vidIDs=DataBase.getRowCount("id", "videos");
+		int vidIDUs[]=DataBase.buscarExistenteArray("usuariosvideos", "video_id", "usuario_id", Integer.toString(usuario_id));
+		int vid[]=new int[vidIDs-vidIDUs.length];
+		int posVid2=0;
+		int cont=1;	
+		int posVid=0;
+		System.out.println("   "+"Nombre");
+		while(cont<vidIDs+1) {
+			if(posVid<vidIDUs.length) {
+			if(cont==vidIDUs[posVid]) {
+			posVid++;
+			}
+			else {
+			vid[posVid2]=cont;
+			posVid2++;
+			}
+			}else {
+			vid[posVid2]=cont;
+			posVid2++;	
+			}
+			cont++;
+		}
+		posVid=0;
+		cont=0;
+		int impri=1;
+		
+		int videosSinVer[]=new int[0];
+		while(cont<vidIDs+1 && posVid<vid.length) {
+		String VsinVer="";
+		String nombre_video="";
+		if(PorCursos.equalsIgnoreCase("PorCursos")) {
+		nombre_video=DataBase.buscarValorDeCampoSegun2ID("videos", "id", Integer.toString(vid[posVid]), "curso_id", Integer.toString(curso_id),"Nombre").toString();
+		}
+		else {
+		nombre_video=DataBase.buscarValorDeCampoSegunID("videos", "id",vid[posVid],"Nombre").toString();
+		}
+		posVid++;
+		if(nombre_video!="" && posVid<vid.length+1) {
+		if(PorCursos.equalsIgnoreCase("PorCursos")) {
+			VsinVer=DataBase.buscarValorDeCampoSegun2ID("videos", "id", Integer.toString(vid[posVid-1]), "curso_id", Integer.toString(curso_id),"id").toString();
+		}else {
+			VsinVer=Integer.toString(DataBase.buscarExistente("videos", "id", "nombre",nombre_video));
+		}
+		videosSinVer=Arrays.copyOf(videosSinVer, videosSinVer.length+1);
+		videosSinVer[videosSinVer.length-1]=Integer.parseInt(VsinVer);
+		System.out.println(impri+". "+nombre_video);
+		impri++;
+		}
+		}
+		if(videosSinVer.length==0) {
+			return -1;
+		}
+		int videos = inputSim.leerInt("el video a ver o "+(impri)+" para retroceder", 1, (impri));
+		if(videos==impri) {
+			return -1;
+		}
+		return videosSinVer[videos-1];
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+	return video;
+}
 
 	public static void verVideo(int video_id, int usuario_id, int curso_id) {
 //		curso_id =3;
