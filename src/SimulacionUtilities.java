@@ -171,7 +171,8 @@ public class SimulacionUtilities {
 	}
 
 	public static int mostrarVideos(int curso_id) {
-		curso_id =3;
+//		curso_id =3;
+		
 		DataBase.accederATabla("videos");
 		int video = 0;
 
@@ -198,15 +199,16 @@ public class SimulacionUtilities {
 		return video;
 	}
 
-	public static void verVideo(int video_id, int usuario_id) {
+	public static void verVideo(int video_id, int usuario_id, int curso_id) {
+//		curso_id =3;
 		DataBase.accederATabla("usuariosvideos");
-		int id=0;
 		try {
 
 //			String ppp = (String)DataBase.buscarValorDeCampoSegunID("usuariosvideos","usuario_id", usuario_id, "video_id").toString();
 //			System.out.println("acajgvagjcajgcsjgacasc " + ppp);
 
 			int[] ids = DataBase.buscarExistenteArray("usuariosvideos", "usuario_id", "video_id", Integer.toString(video_id));
+			
 			
 			boolean sePuedeAgregar = true;
 			for (int i : ids) {
@@ -223,6 +225,39 @@ public class SimulacionUtilities {
 				// agregar a usuariosvideos table
 				DataBase.AgregarRegistroCONDatos("usuario_id", usuario_id, "usuariosvideos", "usuario_id", datos);
 			}
+			
+			int[] vidsCurso = DataBase.buscarExistenteArray("videos", "id", "curso_id", Integer.toString(curso_id));
+			
+			
+			int videosVistosPorUser = 0;
+			for (int i : vidsCurso) {
+				ids = DataBase.buscarExistenteArray("usuariosvideos", "usuario_id", "video_id", Integer.toString(i));
+				for (int j : ids) {
+					if (j==usuario_id) {
+						videosVistosPorUser++;
+					}
+				}
+				
+			}
+			
+			int[] idsCurso = DataBase.buscarExistenteArray("usuarioscursos", "usuario_id", "curso_id", Integer.toString(curso_id));
+			sePuedeAgregar=true;
+			for (int i : idsCurso) {
+				if (i==usuario_id) {
+					sePuedeAgregar=false;
+					break;
+				}
+			}
+			
+			if (sePuedeAgregar && videosVistosPorUser == vidsCurso.length) {
+				Object datos[]=new Object[1];
+				datos[0]= Integer.toString(curso_id) ;
+				// agregar a usuariosvideos table
+				DataBase.AgregarRegistroCONDatos("usuario_id", usuario_id, "usuarioscursos", "usuario_id", datos);
+				System.out.println("cursoCompletado");
+			}
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

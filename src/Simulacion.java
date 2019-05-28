@@ -769,7 +769,7 @@ public class Simulacion {
 	}
 	public void verVideo() throws SQLException, ParseException {
 		System.out.println("Video: "+DataBase.buscarValorDeCampoSegunID("videos","id", video_id, "nombre"));
-		SimulacionUtilities.verVideo(video_id,usuarios_id);
+		SimulacionUtilities.verVideo(video_id,usuarios_id, curso_id);
 		System.out.println("Video visto");
 		this.input.leerString("Cualquier tecla para retroceder Curso\n\n\n");
 		mostrarCursoMenu();
