@@ -1423,6 +1423,32 @@ public class DataBase {
 		      return ids;
 		      	  
 		}
+	public static void mostrar2TablaSegunCriterio2(String tablaASegmentar,String[] at1,
+			String campoParaSegmentar, String campoASeleccionar,String numerado) throws SQLException {
+			accederATabla(tablaASegmentar);
+			String ats="";
+			for(int i=0;i<at1.length;i++) {
+				if(i<at1.length-1) {
+				ats=ats+at1[i]+",";}
+				else {
+					ats=ats+at1[i];
+				}
+			}
+			String querys = "SELECT "+ats+" FROM "+tablaASegmentar+" WHERE "+campoParaSegmentar+" = " +campoASeleccionar;
+		      // create the java sta tement
+		      Statement st = dbConnection.createStatement();
+		      // execute the query, and get a java resultset
+		      ResultSet rs = st.executeQuery(querys);
+		      String preg[][]=new String[0][2];
+		      System.out.println(preg.length);
+		      int cont=0;
+		      while(rs.next()) {
+		    	  preg[0][0]=Arrays.copyOf(preg,preg[0].length()+1);
+		      }
+		      
+		     
+		    
+		}
 	public static ResultSet select2criteriosLog(String tablas, String campo1, int dato1, String log, String campo2, int dato2) throws SQLException {
 		accederATabla(tablas);
 		String querys = "SELECT * FROM "+tabla+" WHERE "+ campo1+ "="+dato1 + " "+ log+ " "+ campo2+ "="+dato2;
