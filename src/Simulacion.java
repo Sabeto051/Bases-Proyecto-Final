@@ -463,6 +463,10 @@ public class Simulacion {
 		String fechaHoy=dateFormat1.format(date22);
 		DateFormat dateFormat2 = new SimpleDateFormat("kk:mm:ss");
 		String horaActual=dateFormat2.format(date22);
+		plan_id=(int) DataBase.buscarValorDeCampoSegunID("usuariosplanes","usuario_id", usuarios_id, "plan_id");
+		if(plan_id==-1) {
+			plan_id=0;
+		}
 		if(plan_id>0) {
 			System.out.println("Usuario ya tiene plan existente. Desea cambiarlo?\n1. Si\n2. No");
 			int cambio=input.leerInt("la accion a tomar",1,2);
